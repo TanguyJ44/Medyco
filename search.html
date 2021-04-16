@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Recherche | Medyco</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container d-flex align-items-center justify-content-between">
+
+            <div class="logo">
+                <h1 class="text-light"><a href="index.html"><span>Medyco</span></a></h1>
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+            </div>
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto" href="#faq">Besoin d'aide ?</a></li>
+                    <li><a class="getdashboard scrollto" href="auth.html">Mon espace santé</a></li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+            <!-- .navbar -->
+
+        </div>
+    </header>
+    <!-- End Header -->
+
+    <main id="main">
+
+        <section id="services" class="services section-bg">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title">
+                    <h2>Recherche</h2>
+                    <p>Rechercher un spécialiste de santé</p>
+                </div>
+
+                <div class="row">
+                    <div class="offset-md-2 col-md-8">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select id="oCategorie" name="oCategorie" class="form-select">
+                                    <option selected="selected" value="0">Toutes catégories</option>
+                                    <option value="1">Spécialistes</option>
+                                    <option value="2">Praticiens</option>
+                                    <option value="3">Localisation</option>
+                                </select>
+                            </div>
+                            <input id="oSaisie" name="oSaisie" type="text" class="form-control"
+                                aria-label="Saisie de mots clés" required="required">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card bg-light mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Filtrer les résultats</div>
+                            <div class="card-body">
+
+                                <p>Information sur le praticien</p>
+
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Spécialité <br>
+                                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                            <option selected>Médecin généraliste</option>
+                                            <option value="1">-</option>
+                                            <option value="2">-</option>
+                                            <option value="3">-</option>
+                                        </select>
+                                    </li>
+                                    <li class="list-group-item">Genre <br>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                value="option1" checked>
+                                            <label class="form-check-label" for="inlineCheckbox1">Femme</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                                value="option2" checked>
+                                            <label class="form-check-label" for="inlineCheckbox2">Homme</label>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">Consultation vidéo <br>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                                value="option2" checked>
+                                            <label class="form-check-label" for="inlineCheckbox2">Accepte la
+                                                visio</label>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <br>
+                                <p>Secteur de recherche</p>
+
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Ville <br>
+                                        <input class="form-control form-control-sm" type="text"
+                                            placeholder="Toutes les villes">
+                                    </li>
+                                    <li class="list-group-item">Code Postal <br>
+                                        <input class="form-control form-control-sm" type="number"
+                                            placeholder="Toutes les France">
+                                    </li>
+                                    <li class="list-group-item">Département <br>
+                                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                            <option selected>-</option>
+                                            <option value="1">-</option>
+                                            <option value="2">-</option>
+                                            <option value="3">-</option>
+                                        </select>
+                                    </li>
+                                    <li class="list-group-item">Région <br>
+                                        <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                            <option selected>-</option>
+                                            <option value="1">-</option>
+                                            <option value="2">-</option>
+                                            <option value="3">-</option>
+                                        </select>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Réinitialiser les filtres</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-9 insert">
+                        
+                    </div>
+
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+        <div class="container py-4">
+            <div class="copyright">
+                &copy; Copyright <strong><span>Medyco 2021</span></strong>. Tous droits réservés
+            </div>
+            <div class="credits">
+                Plateforme médicale réalisée dans le cadre d'un projet SUPINFO
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <script
+        type="text/javascript">!function (t, e) { t.artibotApi = { l: [], t: [], on: function () { this.l.push(arguments) }, trigger: function () { this.t.push(arguments) } }; var a = !1, i = e.createElement("script"); i.async = !0, i.type = "text/javascript", i.src = "https://app.artibot.ai/loader.js", e.getElementsByTagName("head").item(0).appendChild(i), i.onreadystatechange = i.onload = function () { if (!(a || this.readyState && "loaded" != this.readyState && "complete" != this.readyState)) { new window.ArtiBot({ i: "a94c8755-686e-47bd-abf0-e9b4fcdc6726" }); a = !0 } } }(window, document);</script>
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="assets/vendor/php-email-form/validate.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="https://use.fontawesome.com/7a75d84eb1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <!-- Template Main JS File -->
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

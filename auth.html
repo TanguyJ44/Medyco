@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Authentification | Medyco</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <link href="" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+        <div class="container d-flex align-items-center justify-content-between">
+
+            <div class="logo">
+                <h1 class="text-light"><a href="index.html"><span>Medyco</span></a></h1>
+            </div>
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto" href="#faq">Besoin d'aide ?</a></li>
+                    <li><a class="getdashboard scrollto" href="auth.html">Mon espace santé</a></li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+            <!-- .navbar -->
+
+        </div>
+    </header>
+    <!-- End Header -->
+
+    <main id="main">
+
+        <section id="services" class="services section-bg">
+            <div class="container" data-aos="fade-up">
+                <div class="section-title" style="padding-bottom: 1px;">
+                    <h2>Espace santé</h2>
+                    <p>Connectez-vous ou créez votre compte</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="auth" class="about">
+            <div class="container">
+
+                <div class="row alert alert-danger justify-content-center" id="error" role="alert" hidden></div>
+
+                <div class="row" id="register-confirm" style="display: none;">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Félicitations, votre compte a bien été enregistré !</h4>
+                        <p>Vous devez maintenant procéder à la vérification de votre adresse e-mail afin de garantir que
+                            vous êtes bien le propriétaire de celle-ci. Pour cela, rendez-vous sur votre boîte mail et
+                            ouvrer le mail que nous venons de vous envoyer. Vous y trouverez un bouton vous permettant
+                            de valider votre compte.</p>
+                        <hr>
+                        <p class="mb-0">Si vous ne parvenez pas à trouver l'email de vérification, penser à regarder
+                            dans votre boîte spam. Pour toutes autres problèmes, merci de bien vouloir nous contacter.
+                        </p>
+                    </div>
+                    <input type="button" class="btn btn-primary btn-format" value="Retourner sur la page de connexion"
+                        onclick="document.location.reload()" />
+                </div>
+
+                <div class="row" id="register-pr-confirm" style="display: none;">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Félicitations, votre compte a bien été enregistré !</h4>
+                        <p>Vos informations ainsi que votre numéro RPPS vont maintenant être analysé par un modérateur
+                            afin de
+                            vérifier la conformité des informations. Une fois que votre compte aura été validé, vous
+                            recevrez une confirmation par e-mail. Nous vous rappelons que vous ne pouvez pas vous
+                            connecter tant que votre compte n'a pas été validé.</p>
+                        <hr>
+                        <p class="mb-0">Pour toutes autres problèmes, merci de bien vouloir nous contacter.</p>
+                    </div>
+                    <input type="button" class="btn btn-primary btn-format" value="Retourner sur la page de connexion"
+                        onclick="document.location.reload()" />
+                </div>
+
+                <div class="row" id="recovery-confirm" style="display: none;">
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Demande de récupération prise en compte !</h4>
+                        <p>Votre demande de récupération de mot de passe a bien été prise en compte. Nous vous avons
+                            envoyé un e-mail contenant toutes les instructions vous permettant de réinitialiser votre
+                            mot de passe.</p>
+                        <hr>
+                        <p class="mb-0">Si vous ne parvenez pas à trouver l'email de récupération, penser à regarder
+                            dans votre boîte spam. Pour toutes autres problèmes, merci de bien vouloir nous contacter.
+                        </p>
+                    </div>
+                    <input type="button" class="btn btn-primary btn-format" value="Retourner sur la page de connexion"
+                        onclick="document.location.reload()" />
+                </div>
+
+                <div class="row" id="form-auth">
+
+                    <div class="card card-auth col-md-5" style="height: 410px;">
+                        <div class="card-header">
+                            Connexion
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text p-bottom">Email</p>
+                            <input class="form-control form-control-sm input-bottom" id="li-email" type="email"
+                                placeholder="Indiquer votre email" required>
+
+                            <p class="card-text p-bottom">Mot de passe</p>
+                            <input class="form-control form-control-sm input-bottom" id="li-password" type="password"
+                                placeholder="Indiquer votre mot de passe" required>
+
+                            <h5 class="card-title h5-format">Je suis un praticien</h5>
+
+                            <p class="card-text p-bottom">Numéro RPPS</p>
+                            <input class="form-control form-control-sm input-bottom" id="li-rpps" type="number"
+                                placeholder="Praticien seulement">
+
+                            <input type="button" class="btn btn-primary btn-format" id="li-submit"
+                                value="Connexion à mon espace santé" onclick="onConnect()" />
+
+                            <p class="card-text p-bottom"><a href="#" onclick="onRecovery()">J'ai oublié mon mot de
+                                    passe</a></p>
+                        </div>
+                    </div>
+
+                    <div class="card card-auth offset-md-2 col-md-5">
+                        <div class="card-header">
+                            Inscription
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text p-bottom">Genre</p>
+                            <select class="form-select-sm input-bottom" id="ri-gender" style="width: 100%;" required>
+                                <option value="0">Homme</option>
+                                <option value="1">Femme</option>
+                            </select>
+
+                            <p class="card-text p-bottom">Nom</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-lastname" type="text"
+                                placeholder="Indiquer votre nom" required>
+
+                            <p class="card-text p-bottom">Prénom</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-firstname" type="text"
+                                placeholder="Indiquer votre prénom" required>
+
+                            <p class="card-text p-bottom">Email</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-email" type="email"
+                                placeholder="Indiquer votre email" required>
+
+                            <p class="card-text p-bottom">Date de naissance</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-birth" type="date"
+                                placeholder="Indiquer votre date de naissance" required>
+
+                            <p class="card-text p-bottom">Adresse</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-address" type="text"
+                                placeholder="Indiquer votre adresse" required>
+
+                            <p class="card-text p-bottom">Ville</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-city" type="text"
+                                placeholder="Indiquer votre ville" required>
+
+                            <p class="card-text p-bottom">Code postal</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-zipcode" type="number"
+                                placeholder="Indiquer votre code postal (ex: 44000)" required>
+
+                            <p class="card-text p-bottom">Mot de passe</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-password1" type="password"
+                                placeholder="Indiquer votre mot de passe" required>
+
+                            <p class="card-text p-bottom">Confirmer mot de passe</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-password2" type="password"
+                                placeholder="Indiquer une nouvelle fois votre mot de passe" required>
+
+                            <h5 class="card-title h5-format">Je suis un praticien</h5>
+
+                            <p class="card-text p-bottom">Numéro RPPS</p>
+                            <input class="form-control form-control-sm input-bottom" id="ri-rpps" type="number"
+                                placeholder="Praticien seulement">
+
+                            <div class="form-check" style="margin-top: 20px;">
+                                <input class="form-check-input" type="checkbox" id="ri-check" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    J'accepte les conditions générales d'utilisation et notre politique de
+                                    confidentialité
+                                </label>
+                            </div>
+
+                            <input type="button" class="btn btn-primary btn-format" id="ri-submit"
+                                value="Créer mon compte" onclick="onRegister()" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+        <div class="container py-4">
+            <div class="copyright">
+                &copy; Copyright <strong><span>Medyco 2021</span></strong>. Tous droits réservés
+            </div>
+            <div class="credits">
+                Plateforme médicale réalisée dans le cadre d'un projet SUPINFO
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center" style="right: 20px;"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="assets/vendor/php-email-form/validate.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="https://use.fontawesome.com/7a75d84eb1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+    <!-- Template Main JS File -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/sha512.js"></script>
+
+</body>
+
+</html>

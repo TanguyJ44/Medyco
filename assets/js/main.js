@@ -1,0 +1,414 @@
+(function () {
+  "use strict";
+
+  /**
+   * Easy selector helper function
+   */
+  const select = (el, all = false) => {
+    el = el.trim()
+    if (all) {
+      return [...document.querySelectorAll(el)]
+    } else {
+      return document.querySelector(el)
+    }
+  }
+
+  /**
+   * Easy event listener function
+   */
+  const on = (type, el, listener, all = false) => {
+    let selectEl = select(el, all)
+    if (selectEl) {
+      if (all) {
+        selectEl.forEach(e => e.addEventListener(type, listener))
+      } else {
+        selectEl.addEventListener(type, listener)
+      }
+    }
+  }
+
+  /**
+   * Easy on scroll event listener 
+   */
+  const onscroll = (el, listener) => {
+    el.addEventListener('scroll', listener)
+  }
+
+  /**
+   * Navbar links active state on scroll
+   */
+  let navbarlinks = select('#navbar .scrollto', true)
+  const navbarlinksActive = () => {
+    let position = window.scrollY + 200
+    navbarlinks.forEach(navbarlink => {
+      if (!navbarlink.hash) return
+      let section = select(navbarlink.hash)
+      if (!section) return
+      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+        navbarlink.classList.add('active')
+      } else {
+        navbarlink.classList.remove('active')
+      }
+    })
+  }
+  window.addEventListener('load', navbarlinksActive)
+  onscroll(document, navbarlinksActive)
+
+  /**
+   * Scrolls to an element with header offset
+   */
+  const scrollto = (el) => {
+    let header = select('#header')
+    let offset = header.offsetHeight
+
+    let elementPos = select(el).offsetTop
+    window.scrollTo({
+      top: elementPos - offset,
+      behavior: 'smooth'
+    })
+  }
+
+  /**
+   * Back to top button
+   */
+  let backtotop = select('.back-to-top')
+  if (backtotop) {
+    const toggleBacktotop = () => {
+      if (window.scrollY > 100) {
+        backtotop.classList.add('active')
+      } else {
+        backtotop.classList.remove('active')
+      }
+    }
+    window.addEventListener('load', toggleBacktotop)
+    onscroll(document, toggleBacktotop)
+  }
+
+  /**
+   * Mobile nav toggle
+   */
+  on('click', '.mobile-nav-toggle', function (e) {
+    select('#navbar').classList.toggle('navbar-mobile')
+    this.classList.toggle('bi-list')
+    this.classList.toggle('bi-x')
+  })
+
+  /**
+   * Mobile nav dropdowns activate
+   */
+  on('click', '.navbar .dropdown > a', function (e) {
+    if (select('#navbar').classList.contains('navbar-mobile')) {
+      e.preventDefault()
+      this.nextElementSibling.classList.toggle('dropdown-active')
+    }
+  }, true)
+
+  /**
+   * Scrool with ofset on links with a class name .scrollto
+   */
+  on('click', '.scrollto', function (e) {
+    if (select(this.hash)) {
+      e.preventDefault()
+
+      let navbar = select('#navbar')
+      if (navbar.classList.contains('navbar-mobile')) {
+        navbar.classList.remove('navbar-mobile')
+        let navbarToggle = select('.mobile-nav-toggle')
+        navbarToggle.classList.toggle('bi-list')
+        navbarToggle.classList.toggle('bi-x')
+      }
+      scrollto(this.hash)
+    }
+  }, true)
+
+  /**
+   * Scroll with ofset on page load with hash links in the url
+   */
+  window.addEventListener('load', () => {
+    if (window.location.hash) {
+      if (select(window.location.hash)) {
+        scrollto(window.location.hash)
+      }
+    }
+  });
+
+  /**
+   * Porfolio isotope and filter
+   */
+  window.addEventListener('load', () => {
+    let portfolioContainer = select('.portfolio-container');
+    if (portfolioContainer) {
+      let portfolioIsotope = new Isotope(portfolioContainer, {
+        itemSelector: '.portfolio-item',
+        layoutMode: 'fitRows'
+      });
+
+      let portfolioFilters = select('#portfolio-flters li', true);
+
+      on('click', '#portfolio-flters li', function (e) {
+        e.preventDefault();
+        portfolioFilters.forEach(function (el) {
+          el.classList.remove('filter-active');
+        });
+        this.classList.add('filter-active');
+
+        portfolioIsotope.arrange({
+          filter: this.getAttribute('data-filter')
+        });
+        portfolioIsotope.on('arrangeComplete', function () {
+          AOS.refresh()
+        });
+      }, true);
+    }
+
+  });
+
+  /**
+   * Initiate portfolio lightbox 
+   */
+  const portfolioLightbox = GLightbox({
+    selector: '.portfolio-lightbox'
+  });
+
+  /**
+   * Portfolio details slider
+   */
+  new Swiper('.portfolio-details-slider', {
+    speed: 400,
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true
+    }
+  });
+
+  /**
+   * Clients Slider
+   */
+  new Swiper('.clients-slider', {
+    speed: 400,
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 2,
+        spaceBetween: 40
+      },
+      480: {
+        slidesPerView: 3,
+        spaceBetween: 60
+      },
+      640: {
+        slidesPerView: 4,
+        spaceBetween: 80
+      },
+      992: {
+        slidesPerView: 6,
+        spaceBetween: 120
+      }
+    }
+  });
+
+  /**
+   * Animation on scroll
+   */
+  window.addEventListener('load', () => {
+    AOS.init({
+      duration: 1000,
+      easing: "ease-in-out",
+      once: true,
+      mirror: false
+    });
+  });
+
+})()
+
+function sendError(error) {
+  $("#error").text(error);
+  $("#error").attr("hidden", false);
+  $('html, body').scrollTop(0);
+}
+
+
+/*
+  SEARCH
+*/
+
+$('#oSaisie').on('input', function (e) {
+  $.ajax({
+    url: 'http://localhost:3000/api/search/' + $('#oSaisie').val(),
+    type: 'GET',
+    dataType: 'html',
+    success: function (data_txt, statut) {
+      $(".insert").empty();
+      $.each(JSON.parse(data_txt), function (i, obj) {
+        if (i != 'message') {
+          $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100' src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' style='color: #3498db;font-weight: bold;text-transform: uppercase;'>" + obj['specialities'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><a href='#' class='btn btn-primary stretched-link'>Prendre rendez-vous</a></div></div></div></div>");
+        }
+      });
+    },
+    error: function (result, statut, erreur) {
+      console.log("Error !");
+    }
+  });
+});
+
+/*
+  AUTH
+*/
+
+function onConnect() {
+  const email = $("#li-email").val();
+  const password = $("#li-password").val();
+  const rpps = $("#li-rpps").val();
+
+  $("#error").attr("hidden", true);
+  $("#li-submit").prop("disabled", true);
+
+  if (!email.match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i) || password.length < 1) {
+    sendError("Vérifier le format de votre e-mail ainsi que la longueur du mot de passe !");
+    $("#li-submit").prop("disabled", false);
+  } else {
+    $.ajax({
+      url: 'http://localhost:3000/api/auth/login/' + email + '$' + hex_sha512(password) + '$' + rpps,
+      type: 'GET',
+      dataType: 'html',
+      success: function (data, statut) {
+        const obj = JSON.parse(data);
+        if (obj.login == true) {
+          // check type (PA ou PR)
+          console.log("Connecté !");
+        } else {
+          sendError("E-mail ou Mot de passe incorrect !");
+          $("#li-submit").prop("disabled", false);
+        }
+      },
+      error: function (result, statut, erreur) {
+        sendError("Une erreur s'est produite, veuillez réessayer");
+        $("#li-submit").prop("disabled", false);
+      }
+    });
+  }
+}
+
+function onRegister() {
+  const client = ({
+    gender: $("#ri-gender").val(),
+    lastname: $("#ri-lastname").val(),
+    firstname: $("#ri-firstname").val(),
+    email: $("#ri-email").val(),
+    birth: $("#ri-birth").val(),
+    address: $("#ri-address").val(),
+    city: $("#ri-city").val(),
+    zipcode: $("#ri-zipcode").val(),
+    password1: $("#ri-password1").val(),
+    password2: $("#ri-password2").val(),
+    rpps: $("#ri-rpps").val(),
+    check: $("#ri-check").prop("checked")
+  });
+
+  $("#error").attr("hidden", true);
+  $("#ri-submit").prop("disabled", true);
+
+  if (client.lastname.length < 1 || client.firstname.length < 1 || client.birth.length < 1
+    || client.address.length < 1 || client.city.length < 1 || client.zipcode.length < 1
+    || client.password1.length < 1 || client.password2.length < 1 || client.check == false) {
+
+    sendError("Veuillez compléter toutes les informations demandées et accepter les conditions générales d'utilisation.");
+    $("#ri-submit").prop("disabled", false);
+  } else {
+    if (!client.email.match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i) || client.email.length < 1
+      || !client.zipcode.match(/^[0-9]{1}[0-9]{1}[0-9]{1}[0-9]{1}[0-9]{1}$/) || client.zipcode.length < 1) {
+      sendError("Veuillez vérifier le format de votre e-mail et de votre code postal.");
+      $("#ri-submit").prop("disabled", false);
+    } else {
+      if (client.password1 != client.password2) {
+        sendError("Les deux mots de passe doivent être identiques.");
+        $("#ri-submit").prop("disabled", false);
+      } else {
+        $.ajax({
+          url: 'http://localhost:3000/api/auth/register',
+          type: 'POST',
+          data: {
+            gender: client.gender,
+            lastname: client.lastname,
+            firstname: client.firstname,
+            email: client.email,
+            birth: client.birth,
+            address: client.address,
+            city: client.city,
+            zipcode: client.zipcode,
+            password: hex_sha512(client.password1),
+            rpps: client.rpps.length < 1 ? 0 : client.rpps,
+          },
+          dataType: 'html',
+          success: function (data, statut) {
+            const obj = JSON.parse(data);
+            if (obj.register == true) {
+              if (obj.type == 0) {
+                $("#form-auth").slideUp(600);
+                $("#register-confirm").slideDown(900);
+              } else {
+                $("#form-auth").slideUp(600);
+                $("#register-pr-confirm").slideDown(900);
+              }
+            } else {
+              sendError("Un compte existe déjà avec cet e-mail.");
+              $("#ri-submit").prop("disabled", false);
+            }
+          },
+          error: function (result, statut, erreur) {
+            sendError("Une erreur s'est produite, veuillez réessayer");
+            $("#ri-submit").prop("disabled", false);
+          }
+        });
+      }
+    }
+  }
+}
+
+function onRecovery() {
+  const email = $("#li-email").val();
+
+  $("#error").attr("hidden", true);
+  $("#li-submit").prop("disabled", true);
+
+  if (!email.match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i) || email.length < 1) {
+    sendError("Vous devez indiquer un e-mail valide dans le champ 'Email' pour pouvoir récupérer votre mot de passe !");
+    $("#li-submit").prop("disabled", false);
+  } else {
+    $.ajax({
+      url: 'http://localhost:3000/api/auth/recovery/' + email,
+      type: 'PUT',
+      dataType: 'html',
+      success: function (data, statut) {
+        const obj = JSON.parse(data);
+        if (obj.recovery == true) {
+          $("#form-auth").slideUp(600);
+          $("#recovery-confirm").slideDown(900);
+        } else {
+          sendError("Aucun compte ne correspond à cette e-mail !");
+          $("#li-submit").prop("disabled", false);
+        }
+      },
+      error: function (result, statut, erreur) {
+        sendError("Une erreur s'est produite, veuillez réessayer");
+        $("#li-submit").prop("disabled", false);
+      }
+    });
+  }
+}
