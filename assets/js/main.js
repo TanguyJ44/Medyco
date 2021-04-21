@@ -251,7 +251,14 @@ function onLoad() {
   if (urlParams.get('search') != null) {
     $("#oSaisie").val(urlParams.get('search'));
   }
-  dispatch();
+
+  if ($('#oSaisie').val().length > 0) {
+    dispatch();
+  }
+
+  if (sessionStorage.getItem('token') != null) {
+    getUserFavoritePr();
+  }
 }
 
 $('#oSaisie').on('input', function (e) {
@@ -271,13 +278,14 @@ function dispatch() {
 function treatment(result) {
   $(".insert").empty();
   $.each(JSON.parse(result), function (i, obj) {
-    if (i != 'message') {
-      console.log(sessionStorage.getItem('token'));
+    if (i != 'message' && $('#oSaisie').val().length > 0) {
       if (sessionStorage.getItem('token') != null) {
-        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' id='" + obj['id'] + "'>Prendre rendez-vous</button></div></div></div></div>");
+        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' onclick=\"window.location='rdv.html?id=" + obj['id'] + "'\";>Prendre rendez-vous</button></div></div></div></div>");
       } else {
         $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' disabled>Prendre rendez-vous</button><p>↪ Vous devez être connecté pour prendre rendez-vous</p></div></div></div></div>");
       }
+    } else {
+      contentEmptySearch();
     }
   });
 }
@@ -307,5 +315,35 @@ function searchCategory(category, query) {
     error: function (result, statut, erreur) {
       console.log("Error !");
     }
+  });
+}
+
+function contentEmptySearch() {
+  $(".insert").empty();
+  if (sessionStorage.getItem('token') != null) {
+
+  } else {
+    $(".insert").append("<p class='text-center'>Veuillez effectuer une recherche pour afficher du contenu</p>");
+  }
+}
+
+function getUserFavoritePr() {
+  $.ajax({
+    url: 'http://localhost:3000/api/favorite/' + sessionStorage.getItem('token'),
+    type: 'GET',
+    dataType: 'html',
+    success: function (data, statut) {
+      displayFavorite(data);
+    },
+    error: function (result, statut, erreur) {
+      console.log("Error !");
+    }
+  });
+}
+
+function displayFavorite(data) {
+  $(".insert").empty();
+  $.each(JSON.parse(data), function (i, obj) {
+    $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' onclick=\"window.location='rdv.html?id=" + obj['id'] + "'\";>Prendre rendez-vous</button></div></div></div></div>");
   });
 }
