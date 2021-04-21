@@ -20,7 +20,7 @@ a {
 }
 
 a:hover {
-    color: #ef7f4d;
+    color: #2980b9;
     text-decoration: none;
 }
 
@@ -336,7 +336,7 @@ h1, h2, h3, h4, h5, h6, .font-primary {
 #hero {
     width: 100%;
     height: 70vh;
-    background: #fef8f5;
+    background: #ebf5ff;
     border-bottom: 2px solid #fcebe3;
     margin: 72px 0 -72px 0;
 }
@@ -451,7 +451,8 @@ section {
 }
 
 .section-bg {
-    background-color: #fef8f5;
+    /*background-color: #fef8f5;*/
+    background-color: #ebf5ff;
 }
 
 .section-title {
@@ -594,9 +595,10 @@ section {
 }
 
 .services .icon-box:hover {
-    transition-duration: 1s;
+    /* transition-duration: 1s;
     transform: translateY(-5px);
-    transform: rotateY(360deg);
+    transform: rotateY(360deg); */
+    transform: scale(1.05);
     border-color: #2980b9;
 }
 
@@ -853,14 +855,14 @@ section {
 .faq .faq-list .question {
     display: block;
     position: relative;
-    font-family: #eb5d1e;
+    font-family: #3498db;
     font-size: 18px;
     line-height: 24px;
     font-weight: 400;
     font-weight: 600;
     padding-left: 25px;
     cursor: pointer;
-    color: #c54811;
+    color: #2980b9;
     transition: 0.3s;
 }
 
@@ -885,7 +887,7 @@ section {
 }
 
 .faq .faq-list .collapsed:hover {
-    color: #eb5d1e;
+    color: #3498db;
 }
 
 .faq .faq-list .collapsed .icon-show {
@@ -1208,6 +1210,19 @@ section {
     margin-top: -5px;
     font-size: 20px;
     color: #3498db;
+    cursor: pointer;
+}
+
+#p-spe {
+    color: #3498db;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.algolia {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
 }
 
 /*--------------------------------------------------------------
@@ -1250,12 +1265,12 @@ section {
     padding: 0 0 30px 0;
     color: #212529;
     font-size: 14px;
-    background: #fef8f5;
+    background: #ebf5ff;
 }
 
 #footer .footer-newsletter {
     padding: 50px 0;
-    background: #fef8f5;
+    background: #ebf5ff;
     text-align: center;
     font-size: 15px;
 }

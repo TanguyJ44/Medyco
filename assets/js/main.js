@@ -237,178 +237,75 @@
 
 })()
 
-function sendError(error) {
-  $("#error").text(error);
-  $("#error").attr("hidden", false);
-  $('html, body').scrollTop(0);
-}
-
 
 /*
   SEARCH
 */
 
+function onLoad() {
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (urlParams.get('category') != null) {
+    $("#oCategorie").val(urlParams.get('category'));
+  }
+  if (urlParams.get('search') != null) {
+    $("#oSaisie").val(urlParams.get('search'));
+  }
+  dispatch();
+}
+
 $('#oSaisie').on('input', function (e) {
+  dispatch();
+});
+
+function dispatch() {
+  if ($('#oCategorie').val() == "all") {
+    search($('#oSaisie').val());
+  } else if ($('#oCategorie').val() == "loc") {
+    searchCategory(['address', 'city', 'zipcode', 'department', 'region'], $('#oSaisie').val());
+  } else {
+    searchCategory($('#oCategorie').val(), $('#oSaisie').val());
+  }
+}
+
+function treatment(result) {
+  $(".insert").empty();
+  $.each(JSON.parse(result), function (i, obj) {
+    if (i != 'message') {
+      console.log(sessionStorage.getItem('token'));
+      if (sessionStorage.getItem('token') != null) {
+        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' id='" + obj['id'] + "'>Prendre rendez-vous</button></div></div></div></div>");
+      } else {
+        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' disabled>Prendre rendez-vous</button><p>↪ Vous devez être connecté pour prendre rendez-vous</p></div></div></div></div>");
+      }
+    }
+  });
+}
+
+function search(query) {
   $.ajax({
-    url: 'http://localhost:3000/api/search/' + $('#oSaisie').val(),
+    url: 'http://localhost:3000/api/search/' + query,
     type: 'GET',
     dataType: 'html',
-    success: function (data_txt, statut) {
-      $(".insert").empty();
-      $.each(JSON.parse(data_txt), function (i, obj) {
-        if (i != 'message') {
-          $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100' src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' style='color: #3498db;font-weight: bold;text-transform: uppercase;'>" + obj['specialities'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><a href='#' class='btn btn-primary stretched-link'>Prendre rendez-vous</a></div></div></div></div>");
-        }
-      });
+    success: function (data, statut) {
+      treatment(data);
     },
     error: function (result, statut, erreur) {
       console.log("Error !");
     }
   });
-});
-
-/*
-  AUTH
-*/
-
-function onConnect() {
-  const email = $("#li-email").val();
-  const password = $("#li-password").val();
-  const rpps = $("#li-rpps").val();
-
-  $("#error").attr("hidden", true);
-  $("#li-submit").prop("disabled", true);
-
-  if (!email.match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i) || password.length < 1) {
-    sendError("Vérifier le format de votre e-mail ainsi que la longueur du mot de passe !");
-    $("#li-submit").prop("disabled", false);
-  } else {
-    $.ajax({
-      url: 'http://localhost:3000/api/auth/login/' + email + '$' + hex_sha512(password) + '$' + rpps,
-      type: 'GET',
-      dataType: 'html',
-      success: function (data, statut) {
-        const obj = JSON.parse(data);
-        if (obj.login == true) {
-          // check type (PA ou PR)
-          console.log("Connecté !");
-        } else {
-          sendError("E-mail ou Mot de passe incorrect !");
-          $("#li-submit").prop("disabled", false);
-        }
-      },
-      error: function (result, statut, erreur) {
-        sendError("Une erreur s'est produite, veuillez réessayer");
-        $("#li-submit").prop("disabled", false);
-      }
-    });
-  }
 }
 
-function onRegister() {
-  const client = ({
-    gender: $("#ri-gender").val(),
-    lastname: $("#ri-lastname").val(),
-    firstname: $("#ri-firstname").val(),
-    email: $("#ri-email").val(),
-    birth: $("#ri-birth").val(),
-    address: $("#ri-address").val(),
-    city: $("#ri-city").val(),
-    zipcode: $("#ri-zipcode").val(),
-    password1: $("#ri-password1").val(),
-    password2: $("#ri-password2").val(),
-    rpps: $("#ri-rpps").val(),
-    check: $("#ri-check").prop("checked")
-  });
-
-  $("#error").attr("hidden", true);
-  $("#ri-submit").prop("disabled", true);
-
-  if (client.lastname.length < 1 || client.firstname.length < 1 || client.birth.length < 1
-    || client.address.length < 1 || client.city.length < 1 || client.zipcode.length < 1
-    || client.password1.length < 1 || client.password2.length < 1 || client.check == false) {
-
-    sendError("Veuillez compléter toutes les informations demandées et accepter les conditions générales d'utilisation.");
-    $("#ri-submit").prop("disabled", false);
-  } else {
-    if (!client.email.match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i) || client.email.length < 1
-      || !client.zipcode.match(/^[0-9]{1}[0-9]{1}[0-9]{1}[0-9]{1}[0-9]{1}$/) || client.zipcode.length < 1) {
-      sendError("Veuillez vérifier le format de votre e-mail et de votre code postal.");
-      $("#ri-submit").prop("disabled", false);
-    } else {
-      if (client.password1 != client.password2) {
-        sendError("Les deux mots de passe doivent être identiques.");
-        $("#ri-submit").prop("disabled", false);
-      } else {
-        $.ajax({
-          url: 'http://localhost:3000/api/auth/register',
-          type: 'POST',
-          data: {
-            gender: client.gender,
-            lastname: client.lastname,
-            firstname: client.firstname,
-            email: client.email,
-            birth: client.birth,
-            address: client.address,
-            city: client.city,
-            zipcode: client.zipcode,
-            password: hex_sha512(client.password1),
-            rpps: client.rpps.length < 1 ? 0 : client.rpps,
-          },
-          dataType: 'html',
-          success: function (data, statut) {
-            const obj = JSON.parse(data);
-            if (obj.register == true) {
-              if (obj.type == 0) {
-                $("#form-auth").slideUp(600);
-                $("#register-confirm").slideDown(900);
-              } else {
-                $("#form-auth").slideUp(600);
-                $("#register-pr-confirm").slideDown(900);
-              }
-            } else {
-              sendError("Un compte existe déjà avec cet e-mail.");
-              $("#ri-submit").prop("disabled", false);
-            }
-          },
-          error: function (result, statut, erreur) {
-            sendError("Une erreur s'est produite, veuillez réessayer");
-            $("#ri-submit").prop("disabled", false);
-          }
-        });
-      }
+function searchCategory(category, query) {
+  $.ajax({
+    url: 'http://localhost:3000/api/search/' + category + '/' + query,
+    type: 'GET',
+    dataType: 'html',
+    success: function (data, statut) {
+      treatment(data);
+    },
+    error: function (result, statut, erreur) {
+      console.log("Error !");
     }
-  }
-}
-
-function onRecovery() {
-  const email = $("#li-email").val();
-
-  $("#error").attr("hidden", true);
-  $("#li-submit").prop("disabled", true);
-
-  if (!email.match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i) || email.length < 1) {
-    sendError("Vous devez indiquer un e-mail valide dans le champ 'Email' pour pouvoir récupérer votre mot de passe !");
-    $("#li-submit").prop("disabled", false);
-  } else {
-    $.ajax({
-      url: 'http://localhost:3000/api/auth/recovery/' + email,
-      type: 'PUT',
-      dataType: 'html',
-      success: function (data, statut) {
-        const obj = JSON.parse(data);
-        if (obj.recovery == true) {
-          $("#form-auth").slideUp(600);
-          $("#recovery-confirm").slideDown(900);
-        } else {
-          sendError("Aucun compte ne correspond à cette e-mail !");
-          $("#li-submit").prop("disabled", false);
-        }
-      },
-      error: function (result, statut, erreur) {
-        sendError("Une erreur s'est produite, veuillez réessayer");
-        $("#li-submit").prop("disabled", false);
-      }
-    });
-  }
+  });
 }
