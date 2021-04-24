@@ -242,6 +242,9 @@
   SEARCH
 */
 
+var searchData = null;
+var favoriteData = null;
+
 function onLoad() {
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -257,7 +260,7 @@ function onLoad() {
   }
 
   if (sessionStorage.getItem('token') != null) {
-    getUserFavoritePr();
+    getUserFavoritePr(1);
   }
 }
 
@@ -277,17 +280,64 @@ function dispatch() {
 
 function treatment(result) {
   $(".insert").empty();
-  $.each(JSON.parse(result), function (i, obj) {
+  $.each(result, function (i, obj) {
     if (i != 'message' && $('#oSaisie').val().length > 0) {
-      if (sessionStorage.getItem('token') != null) {
-        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' onclick=\"window.location='rdv.html?id=" + obj['id'] + "'\";>Prendre rendez-vous</button></div></div></div></div>");
+      let fillClass = "";
+      if (favoriteData != null && favoriteData.indexOf(obj['userId']) != -1) {
+        fillClass = "-fill";
       } else {
-        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' disabled>Prendre rendez-vous</button><p>↪ Vous devez être connecté pour prendre rendez-vous</p></div></div></div></div>");
+        fillClass = "";
+      }
+      if (sessionStorage.getItem('token') != null) {
+        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='fav bi bi-star" + fillClass + "' id='" + obj['id'] + "' data-id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' onclick=\"window.location='rdv.html?id=" + obj['id'] + "'\";>Prendre rendez-vous</button></div></div></div></div>");
+      } else {
+        $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "</h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' disabled>Prendre rendez-vous</button><p>↪ Vous devez être connecté pour prendre rendez-vous</p></div></div></div></div>");
       }
     } else {
       contentEmptySearch();
     }
   });
+}
+
+function filter() {
+  var filterData = JSON.parse(searchData);
+
+  $.each(filterData, function (i, obj) {
+    if ($("#filter-spe").val() != "all" && obj['specialties'] != $("#filter-spe").val()) {
+      delete filterData[i];
+    }
+    if ($("#filter-woman").is(":checked") && !$("#filter-man").is(":checked")) {
+      if (obj['gender'] == 0) {
+        delete filterData[i];
+      }
+    }
+    if ($("#filter-man").is(":checked") && !$("#filter-woman").is(":checked")) {
+      if (obj['gender'] == 1) {
+        delete filterData[i];
+      }
+    }
+    if ($("#filter-visio").is(":checked") && obj['visio'] == 0) {
+      delete filterData[i];
+    } else if (!$("#filter-visio").is(":checked") && obj['visio'] == 1) {
+      delete filterData[i];
+    }
+    if ($("#filter-city").val().length > 0 && obj['city'].includes($("#filter-city").val().toUpperCase()) == false) {
+      delete filterData[i];
+    }
+    if ($("#filter-zipcode").val().length == 5 &&  obj['zipcode'] != $("#filter-zipcode").val()) {
+      delete filterData[i];
+    }
+    if ($("#filter-department").val() != "all" && obj['department'] != $("#filter-department").val()) {
+      delete filterData[i];
+    }
+    if ($("#filter-region").val() != "all" && obj['region'] != $("#filter-region").val()) {
+      delete filterData[i];
+    }
+  });
+
+  filterData = filterData.filter(o => Object.keys(o).length);
+
+  treatment(filterData);
 }
 
 function search(query) {
@@ -296,7 +346,8 @@ function search(query) {
     type: 'GET',
     dataType: 'html',
     success: function (data, statut) {
-      treatment(data);
+      searchData = data;
+      filter();
     },
     error: function (result, statut, erreur) {
       console.log("Error !");
@@ -310,7 +361,8 @@ function searchCategory(category, query) {
     type: 'GET',
     dataType: 'html',
     success: function (data, statut) {
-      treatment(data);
+      searchData = data;
+      filter();
     },
     error: function (result, statut, erreur) {
       console.log("Error !");
@@ -320,20 +372,25 @@ function searchCategory(category, query) {
 
 function contentEmptySearch() {
   $(".insert").empty();
-  if (sessionStorage.getItem('token') != null) {
-
+  if (sessionStorage.getItem('token') != null && favoriteData != null) {
+    displayFavorite(favoriteData);
   } else {
     $(".insert").append("<p class='text-center'>Veuillez effectuer une recherche pour afficher du contenu</p>");
   }
 }
 
-function getUserFavoritePr() {
+function getUserFavoritePr(display) {
   $.ajax({
     url: 'http://localhost:3000/api/favorite/' + sessionStorage.getItem('token'),
     type: 'GET',
     dataType: 'html',
     success: function (data, statut) {
-      displayFavorite(data);
+      if (JSON.parse(data).favorite != false) {
+        favoriteData = data;
+        if (display == 1) {
+          displayFavorite(favoriteData);
+        }
+      }
     },
     error: function (result, statut, erreur) {
       console.log("Error !");
@@ -344,6 +401,76 @@ function getUserFavoritePr() {
 function displayFavorite(data) {
   $(".insert").empty();
   $.each(JSON.parse(data), function (i, obj) {
-    $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='bi bi-star' id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' onclick=\"window.location='rdv.html?id=" + obj['id'] + "'\";>Prendre rendez-vous</button></div></div></div></div>");
+    $(".insert").append("<div class='card card-search'><div class='row no-gutters'><div class='col-sm-4'><img class='card-img-top h-100'src='https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg' width='100' height='100'></div><div class='col-sm-8'><div class='card-body'><h5 class='card-title'>" + obj['name'] + "<i class='fav bi bi-star-fill' id='" + obj['id'] + "' data-id='fav-icon'></i></h5><p class='card-text' id='p-spe'>" + obj['specialties'] + "</p><p class='card-text'>" + obj['address'] + " - " + obj['zipcode'] + " " + obj['city'] + "</p><button type='button' class='btn btn-primary' onclick=\"window.location='rdv.html?id=" + obj['id'] + "'\";>Prendre rendez-vous</button></div></div></div></div>");
   });
 }
+
+$(document).on('click', '.fav', function (event) {
+  if ($("#" + event.target.id).hasClass("bi-star-fill")) {
+    removeUserFavoritePr(event.target.id);
+  } else {
+    addUserFavoritePr(event.target.id);
+  }
+});
+
+function addUserFavoritePr(prId) {
+  $("#" + prId).removeClass("bi-star");
+  $("#" + prId).addClass("bi-star-fill");
+  $.ajax({
+    url: 'http://localhost:3000/api/favorite/' + sessionStorage.getItem('token') + '/add/' + prId,
+    type: 'PUT',
+    dataType: 'html',
+    success: function (data, statut) {
+      if (JSON.parse(data).addFavorite == true) {
+        if ($('#oSaisie').val().length > 0) {
+          getUserFavoritePr(0);
+        } else {
+          getUserFavoritePr(1);
+        }
+      } else {
+        $("#" + prId).removeClass("bi-star-fill");
+        $("#" + prId).addClass("bi-star");
+      }
+    },
+    error: function (result, statut, erreur) {
+      console.log("Error !");
+    }
+  });
+}
+
+function removeUserFavoritePr(prId) {
+  $("#" + prId).removeClass("bi-star-fill");
+  $("#" + prId).addClass("bi-star");
+  $.ajax({
+    url: 'http://localhost:3000/api/favorite/' + sessionStorage.getItem('token') + '/remove/' + prId,
+    type: 'DELETE',
+    dataType: 'html',
+    success: function (data, statut) {
+      if (JSON.parse(data).removeFavorite == true) {
+        if ($('#oSaisie').val().length > 0) {
+          getUserFavoritePr(0);
+        } else {
+          getUserFavoritePr(1);
+        }
+      } else {
+        $("#" + prId).removeClass("bi-star");
+        $("#" + prId).addClass("bi-star-fill");
+      }
+    },
+    error: function (result, statut, erreur) {
+      console.log("Error !");
+    }
+  });
+}
+
+$(document).change(function (event) {
+  if (event.target.id.indexOf('filter') != -1) {
+    filter();
+  }
+});
+
+$(document).on('input', function (event) {
+  if (event.target.id.indexOf('filter') != -1) {
+    filter();
+  }
+});

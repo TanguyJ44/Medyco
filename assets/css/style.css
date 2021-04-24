@@ -1205,7 +1205,15 @@ section {
     margin-bottom: 15px;
 }
 
-#fav-icon {
+/* #fav-icon {
+    float: right;
+    margin-top: -5px;
+    font-size: 20px;
+    color: #3498db;
+    cursor: pointer;
+} */
+
+i[data-id='fav-icon'] {
     float: right;
     margin-top: -5px;
     font-size: 20px;
