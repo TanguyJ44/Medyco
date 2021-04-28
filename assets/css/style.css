@@ -1,10 +1,3 @@
-/**
-* Template Name: Ninestars - v4.0.1
-* Template URL: https://bootstrapmade.com/ninestars-free-bootstrap-3-theme-for-creative/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
@@ -101,7 +94,12 @@ h1, h2, h3, h4, h5, h6, .font-primary {
 #header .logo img {
     padding: 0;
     margin: 0;
-    max-height: 40px;
+    max-height: 55px;
+}
+
+#header .logo img:hover {
+    transition-duration: 1s;
+    transform: scale(1.05);
 }
 
 #main {
@@ -636,7 +634,7 @@ section {
 # Portfolio
 --------------------------------------------------------------*/
 
-.portfolio .portfolio-item {
+/* .portfolio .portfolio-item {
     margin-bottom: 30px;
 }
 
@@ -765,13 +763,13 @@ section {
 .portfolio .portfolio-wrap:hover .portfolio-info {
     opacity: 1;
     bottom: 0;
-}
+} */
 
 /*--------------------------------------------------------------
 # Portfolio Details
 --------------------------------------------------------------*/
 
-.portfolio-details {
+/* .portfolio-details {
     padding-top: 40px;
 }
 
@@ -831,7 +829,7 @@ section {
 
 .portfolio-details .portfolio-description p {
     padding: 0;
-}
+} */
 
 /*--------------------------------------------------------------
 # F.A.Q
@@ -1232,6 +1230,44 @@ i[data-id='fav-icon'] {
     margin-bottom: 5px;
     cursor: pointer;
 }
+
+/*--------------------------------------------------------------
+# RDV
+--------------------------------------------------------------*/
+
+.card-rdv {
+    padding: 0px;
+    border-radius: 15px;
+}
+
+.card-bg-rdv {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-weight: bold;
+    background-color: #3498db;
+}
+
+.btn-confirm-rdv {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #3498db;
+    border: none;
+}
+
+.item-rdv {
+    margin-top: 5px;
+    padding-bottom: 15px;
+}
+
+i[data-id='date-change'] {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+p[data-id='rdv-date'] {
+    font-size: 12px;
+}
+
 
 /*--------------------------------------------------------------
 # Auth
