@@ -3,6 +3,8 @@ var refDate = null;
 function initDate() {
     refDate = new Date();
     displayDate();
+    getPrInfo();
+    getPaChildrenInfo();
 }
 
 function changeDate(type) {
@@ -42,6 +44,63 @@ function displayDate() {
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day6').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day6').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+}
+
+$("#regular-yes").on("click", function () {
+    $("#regular-yes").removeClass("btn-outline-secondary");
+    $("#regular-yes").addClass("btn-primary");
+    $("#regular-no").removeClass("btn-primary");
+    $("#regular-no").addClass("btn-outline-secondary");
+});
+
+$("#regular-no").on("click", function () {
+    $("#regular-no").removeClass("btn-outline-secondary");
+    $("#regular-no").addClass("btn-primary");
+    $("#regular-yes").removeClass("btn-primary");
+    $("#regular-yes").addClass("btn-outline-secondary");
+});
+
+function getPrInfo() {
+    const urlParams = new URLSearchParams(window.location.search);
+    $.ajax({
+        url: 'http://localhost:3000/api/rdv/pr/' + urlParams.get('id') + '/info',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            const result = JSON.parse(data);
+            $("#pr-info-name").text(result[0].name);
+            $("#pr-info-spe").text(result[0].specialties);
+            $("#pr-info-addr").text(result[0].address);
+            $("#pr-info-city").text(result[0].zipcode + ' ' + result[0].city);
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function getPaChildrenInfo() {
+    $.ajax({
+        url: 'http://localhost:3000/api/rdv/pa/' + sessionStorage.getItem('token') + '/name',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            const result = JSON.parse(data);
+
+            if (result.paName != false) {
+                for (let i = 0; i < result.length; i++) {
+                    if (i == 0) {
+                        $("#pa-children").append("<option value='" + result[i] + "' selected>" + result[i] + "</option>");
+                    } else {
+                        $("#pa-children").append("<option value='" + result[i] + "'>" + result[i] + "</option>");
+                    }
+                }
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
 }
 
 function getDayName(day) {

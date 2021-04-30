@@ -10,7 +10,7 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="" rel="icon">
+    <link href="assets/img/favicon.png" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
@@ -37,9 +37,7 @@
         <div class="container d-flex align-items-center justify-content-between">
 
             <div class="logo">
-                <h1 class="text-light"><a href="index.html"><span>Medyco</span></a></h1>
-                <!-- Uncomment below if you prefer to use an image logo -->
-                <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+                <a href="index.html"><img src="assets/img/logo.png"></a>
             </div>
 
             <nav id="navbar" class="navbar">
@@ -58,7 +56,19 @@
     <main id="main">
 
         <section id="services" class="services section-bg">
+            <div class="row" data-aos="fade-up">
+                <div class="offset-md-3 col-md-2">
+                    <img src="https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg" width='250'
+                        height='200' />
+                </div>
 
+                <div class="col-md-6" style="padding-left: 50px;">
+                    <h2 id="pr-info-name">-</h2>
+                    <h3 id="pr-info-spe">-</h3>
+                    <p id="pr-info-addr">-</p>
+                    <p id="pr-info-city">-</p>
+                </div>
+            </div>
         </section>
 
         <section id="about" class="about">
@@ -108,6 +118,43 @@
                                         style="float: right;margin: 0;"></i>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="offset-md-1 col-md-10">
+                                    <div class="row">
+
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary"
+                                                data-id='rdv-btn'>00h00</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary"
+                                                data-id='rdv-btn'>00h00</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary"
+                                                data-id='rdv-btn'>00h00</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary"
+                                                data-id='rdv-btn'>00h00</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary"
+                                                data-id='rdv-btn'>00h00</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary"
+                                                data-id='rdv-btn'>00h00</button>
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -125,16 +172,14 @@
                                     <p class="card-text">Si vous prenez rendez-vous pour quelqu'un d'autre, cette
                                         question le concerne</p>
                                     <button type="button" class="btn btn-outline-secondary"
-                                        style="float: left;width: 48%;">OUI</button>
+                                        style="float: left;width: 48%;" id="regular-yes">OUI</button>
                                     <button type="button" class="btn btn-outline-secondary"
-                                        style="float: right;width: 48%;">NON</button>
+                                        style="float: right;width: 48%;" id="regular-no">NON</button>
                                 </li>
                                 <li class="list-group-item item-rdv">
                                     <h5 class="card-title">Pour qui prenez-vous ce rendez-vous ?</h5>
-                                    <p class="card-text">Indiquer le nom de la personne concerné par ce rendez-vous</p>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option value="" selected>PRÉNOM NOM</option>
-                                        <option value="">PRÉNOM NOM</option>
+                                    <p class="card-text">Sélectionner le nom de la personne concerné par ce rendez-vous</p>
+                                    <select class="form-select" id="pa-children">
                                     </select>
                                 </li>
                                 <li class="list-group-item item-rdv">
