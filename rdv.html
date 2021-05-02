@@ -57,12 +57,12 @@
 
         <section id="services" class="services section-bg">
             <div class="row" data-aos="fade-up">
-                <div class="offset-md-3 col-md-2">
+                <div class="offset-md-3 col-md-3">
                     <img src="https://hellocare.com/blog/wp-content/uploads/2019/06/page_medecin.jpg" width='250'
-                        height='200' />
+                        height='200' style="float: right;" />
                 </div>
 
-                <div class="col-md-6" style="padding-left: 50px;">
+                <div class="col-md-6">
                     <h2 id="pr-info-name">-</h2>
                     <h3 id="pr-info-spe">-</h3>
                     <p id="pr-info-addr">-</p>
@@ -83,7 +83,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-1">
-                                    <i class="bi bi-caret-left" data-id="date-change" onclick="changeDate(0)"></i>
+                                    <i class="bi bi-caret-left" id="prev-btn" data-id="date-change"
+                                        onclick="changeDate(0)"></i>
                                 </div>
                                 <div class="col-md-10">
                                     <div class="row text-center" style="padding-top: 5px;">
@@ -114,50 +115,44 @@
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <i class="bi bi-caret-right" data-id="date-change" onclick="changeDate(1)"
-                                        style="float: right;margin: 0;"></i>
+                                    <i class="bi bi-caret-right" id="next-btn" data-id="date-change"
+                                        onclick="changeDate(1)" style="float: right;margin: 0;"></i>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="offset-md-1 col-md-10">
+
+                                <div class="offset-md-5 col-md-1" id="rdv-load">
+                                    <div class="spinner-border text-secondary" style="margin-left: 90%;">
+                                    </div>
+                                </div>
+
+                                <div class="offset-md-1 col-md-10" id="rdv-slots" style="display: none;">
                                     <div class="row">
 
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary"
-                                                data-id='rdv-btn'>00h00</button>
+                                        <div class="col-md-2" id="rdv-col-1">
+
                                         </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary"
-                                                data-id='rdv-btn'>00h00</button>
+                                        <div class="col-md-2" id="rdv-col-2">
+
                                         </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary"
-                                                data-id='rdv-btn'>00h00</button>
+                                        <div class="col-md-2" id="rdv-col-3">
+
                                         </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary"
-                                                data-id='rdv-btn'>00h00</button>
+                                        <div class="col-md-2" id="rdv-col-4">
+
                                         </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary"
-                                                data-id='rdv-btn'>00h00</button>
+                                        <div class="col-md-2" id="rdv-col-5">
+
                                         </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-primary"
-                                                data-id='rdv-btn'>00h00</button>
+                                        <div class="col-md-2" id="rdv-col-6">
+
                                         </div>
 
                                     </div>
-
-
-
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
 
                     <div class="offset-md-1 col-md-3 card card-rdv">
                         <div class="card-header text-white card-bg-rdv">
@@ -178,7 +173,8 @@
                                 </li>
                                 <li class="list-group-item item-rdv">
                                     <h5 class="card-title">Pour qui prenez-vous ce rendez-vous ?</h5>
-                                    <p class="card-text">Sélectionner le nom de la personne concerné par ce rendez-vous</p>
+                                    <p class="card-text">Sélectionner le nom de la personne concerné par ce rendez-vous
+                                    </p>
                                     <select class="form-select" id="pa-children">
                                     </select>
                                 </li>
@@ -191,7 +187,8 @@
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rdv-type">
+                                        <input class="form-check-input" type="radio" id="rdv-type-visio"
+                                            name="rdv-type">
                                         <label class="form-check-label">
                                             En visio-conférence
                                         </label>

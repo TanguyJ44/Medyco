@@ -1,4 +1,5 @@
 var refDate = null;
+var slotsDate = [];
 
 function initDate() {
     refDate = new Date();
@@ -12,6 +13,8 @@ function changeDate(type) {
     if (type == 0) {
         if (!(refDate.getDate() == ref.getDate() && refDate.getMonth() == ref.getMonth())) {
             refDate.setDate(refDate.getDate() - 6);
+        } else {
+            return;
         }
     } else {
         refDate.setDate(refDate.getDate() + 6);
@@ -22,28 +25,59 @@ function changeDate(type) {
 function displayDate() {
     let nextDay = new Date(refDate);
 
+    slotsDate = [];
+
     $('#rdv-day1').text(getDayName(refDate.getDay()));
     $('#rdv-date-day1').text(refDate.getDate() + " " + getMonthName(refDate.getMonth()));
+    saveAllCurrentDate(refDate.getFullYear(), refDate.getMonth(), refDate.getDate());
 
     nextDay.setDate(refDate.getDate() + 1);
     $('#rdv-day2').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day2').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day3').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day3').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day4').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day4').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day5').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day5').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day6').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day6').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    getSlotsDate(0, urlParams.get('id'));
+}
+
+function saveAllCurrentDate(year, month, date) {
+    let formatMonth = null;
+    let formatDate = null;
+
+    formatMonth = month + 1;
+
+    if (formatMonth < 10) {
+        formatMonth = "0" + formatMonth;
+    }
+
+    if (date < 10) {
+        formatDate = "0" + date;
+    } else {
+        formatDate = date;
+    }
+
+    slotsDate.push(year + "-" + formatMonth + "-" + formatDate);
 }
 
 $("#regular-yes").on("click", function () {
@@ -72,6 +106,9 @@ function getPrInfo() {
             $("#pr-info-spe").text(result[0].specialties);
             $("#pr-info-addr").text(result[0].address);
             $("#pr-info-city").text(result[0].zipcode + ' ' + result[0].city);
+            if (result[0].visio == 0) {
+                $("#rdv-type-visio").attr("disabled", true);
+            }
         },
         error: function (result, statut, erreur) {
             console.log("Error !");
@@ -101,6 +138,56 @@ function getPaChildrenInfo() {
             console.log("Error !");
         }
     });
+}
+
+function getSlotsDate(index, id) {
+    $("#prev-btn").attr('onclick', '');
+    $("#next-btn").attr('onclick', '');
+    $("#rdv-slots").hide();
+    $("#rdv-load").show();
+    $.ajax({
+        url: 'http://localhost:3000/api/rdv/pr/' + id + '/slots/' + slotsDate[index],
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            const result = JSON.parse(data);
+
+            let col = index + 1;
+            $("#rdv-col-" + col).empty();
+
+            if (!(result.rdvSlots == false || result.length < 2)) {
+                for (let i = 0; i < result.length; i++) {
+                    $("#rdv-col-" + col).append("<button type='button' class='btn btn-primary' data-id='rdv-btn' id='" + result[i] + "'>" + formatTimeSlot(result[i]) + "</button>");
+                }
+            }
+
+            if (index < 5) {
+                getSlotsDate(index + 1, id)
+            } else {
+                $("#prev-btn").attr('onclick', 'changeDate(0)');
+                $("#next-btn").attr('onclick', 'changeDate(1)');
+                $("#rdv-slots").show();
+                $("#rdv-load").hide();
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function formatTimeSlot(time) {
+    let left = time.substring(0, time.indexOf("h"));
+    let right = time.substring(time.indexOf("h") + 1, time.length);
+
+    if (left.length == 1) {
+        left = "0" + left;
+    }
+    if (right.length == 1) {
+        right = "0" + right;
+    }
+
+    return left + "h" + right;
 }
 
 function getDayName(day) {

@@ -1239,6 +1239,7 @@ i[data-id='fav-icon'] {
 .card-rdv {
     padding: 0px;
     border-radius: 15px;
+    height: 100%;
 }
 
 .card-bg-rdv {
