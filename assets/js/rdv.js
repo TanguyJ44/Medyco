@@ -280,7 +280,8 @@ function createNewRdv(id) {
                 reason: $('#rdv-reason').val(),
                 date: selectedDate,
                 time: selectedTime,
-                patientId: $('#pa-children').val()
+                patientId: $('#pa-children').val(),
+                prName: $('#pr-info-name').text()
             },
             dataType: 'html',
             success: function (data, statut) {
