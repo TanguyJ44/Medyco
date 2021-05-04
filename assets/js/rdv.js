@@ -1,5 +1,9 @@
 var refDate = null;
 var slotsDate = [];
+var selectedId = null;
+var selectedDate = null;
+var selectedTime = null;
+var regularRdv = null;
 
 function initDate() {
     refDate = new Date();
@@ -85,6 +89,8 @@ $("#regular-yes").on("click", function () {
     $("#regular-yes").addClass("btn-primary");
     $("#regular-no").removeClass("btn-primary");
     $("#regular-no").addClass("btn-outline-secondary");
+
+    regularRdv = 1;
 });
 
 $("#regular-no").on("click", function () {
@@ -92,6 +98,27 @@ $("#regular-no").on("click", function () {
     $("#regular-no").addClass("btn-primary");
     $("#regular-yes").removeClass("btn-primary");
     $("#regular-yes").addClass("btn-outline-secondary");
+
+    regularRdv = 0;
+});
+
+$(document).on('click', "button[data-id='rdv-btn']", function (event) {
+    if (selectedId != null) {
+        $("#" + selectedId).css("background-color", "#3498db");
+    }
+
+    selectedId = event.target.id;
+
+    let colSelected = event.target.id.substring(0, 1);
+    selectedDate = slotsDate[colSelected];
+
+    selectedTime = $('#' + event.target.id).text().replace("h", ":") + ":00";
+
+    $("#" + selectedId).css("background-color", "orange");
+});
+
+$("#close-modal").on("click", function () {
+    $('#myModal').modal('hide');
 });
 
 function getPrInfo() {
@@ -127,7 +154,7 @@ function getPaChildrenInfo() {
             if (result.paName != false) {
                 for (let i = 0; i < result.length; i++) {
                     if (i == 0) {
-                        $("#pa-children").append("<option value='" + result[i] + "' selected>" + result[i] + "</option>");
+                        $("#pa-children").append("<option value='owner' selected>" + result[i] + "</option>");
                     } else {
                         $("#pa-children").append("<option value='" + result[i] + "'>" + result[i] + "</option>");
                     }
@@ -157,7 +184,11 @@ function getSlotsDate(index, id) {
 
             if (!(result.rdvSlots == false || result.length < 2)) {
                 for (let i = 0; i < result.length; i++) {
-                    $("#rdv-col-" + col).append("<button type='button' class='btn btn-primary' data-id='rdv-btn' id='" + result[i] + "'>" + formatTimeSlot(result[i]) + "</button>");
+                    let generateId = index + "-" + result[i];
+                    $("#rdv-col-" + col).append('<button type="button" class="btn btn-primary" data-id="rdv-btn" id="' + generateId + '" onclick="selectRdvSlot(' + index + ', \'' + result[i] + '\')">' + formatTimeSlot(result[i]) + '</button>');
+                    if (selectedId != null && generateId == selectedId && slotsDate[index] == selectedDate) {
+                        $("#" + selectedId).css("background-color", "orange");
+                    }
                 }
             }
 
@@ -188,6 +219,97 @@ function formatTimeSlot(time) {
     }
 
     return left + "h" + right;
+}
+
+function selectRdvSlot(index, time) {
+    let date = new Date(slotsDate[index]);
+
+    $('#slot-reserved').text("Créneau sélectionné: " + dateFormat(date.getDate()) + "/" + dateFormat(date.getMonth() + 1) + "/" + date.getFullYear() + " à " + formatTimeSlot(time));
+}
+
+function dateFormat(str) {
+    if (String(str).length == 1) {
+        return "0" + str;
+    } else {
+        return str;
+    }
+}
+
+function checkSlotDispo() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    $.ajax({
+        url: 'http://localhost:3000/api/rdv/pr/' + urlParams.get('id') + '/slots/' + selectedDate,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            const result = JSON.parse(data);
+
+            if (result.indexOf(selectedId.substring(2)) != -1) {
+                createNewRdv(urlParams.get('id'));
+            } else {
+                displayMessage(0);
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function createNewRdv(id) {
+    let rdvType = null;
+
+    $('#rdv-create').prop("disabled", true);
+
+    if ($('#rdv-type-visio').is(":checked") == false) {
+        rdvType = 0;
+    } else {
+        rdvType = 1;
+    }
+
+    if (selectedTime != null && selectedDate != null && rdvType != null) {
+        $.ajax({
+            url: 'http://localhost:3000/api/rdv/new',
+            type: 'POST',
+            data: {
+                token: sessionStorage.getItem('token'),
+                speId: id,
+                type: rdvType,
+                consulted: regularRdv,
+                reason: $('#rdv-reason').val(),
+                date: selectedDate,
+                time: selectedTime,
+                patientId: $('#pa-children').val()
+            },
+            dataType: 'html',
+            success: function (data, statut) {
+                const result = JSON.parse(data);
+
+                if (result.rdv == true) {
+                    $('.content').fadeOut();
+                    displayMessage(1);
+                } else {
+                    alert("Une erreur est survenue : merci de bien vouloir vous reconnecter !");
+                    document.location.reload();
+                }
+            },
+            error: function (result, statut, erreur) {
+                console.log("Error !");
+            }
+        });
+    } else {
+        $('#rdv-create').prop("disabled", false);
+        $('#myModal').modal('show');
+    }
+}
+
+function displayMessage(type) {
+    if (type == 0) {
+        $('.insert-msg').append("<div class='alert alert-danger' role='alert'><h4 class='alert-heading'>Créneau horaire indisponible</h4><p>Le créneau horaire que vous avez choisi n'est plus disponible chez ce praticien, merci de bien vouloir en indiquer un autre !</p><hr><p class='mb-0'><a href='javascript:window.location.reload(true)'>Retourner à la prise de rendez-vous</a></p></div>");
+    } else {
+        $('.insert-msg').append("<div class='alert alert-success' role='alert'><h4 class='alert-heading'>Confirmation de rendez-vous</h4><p>Nous vous confirmons que votre rendez-vous chez le praticien " + $('#pr-info-name').text() + " à bien été confirmé pour le " + selectedDate + " à " + selectedTime.substring(0, 5).replace(":", "h") + ". Vous pouvez désormais accéder à votre espace santé pour vérifier les informations de celui-ci.</p><hr><p class='mb-0'><a href='#'>J'accède à mon espace santé</a></p></div>");
+    }
 }
 
 function getDayName(day) {

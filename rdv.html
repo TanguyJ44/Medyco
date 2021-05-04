@@ -74,7 +74,30 @@
         <section id="about" class="about">
             <div class="container">
 
-                <div class="row">
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Informations manquantes</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Vérifier que toutes les informations demandées soit bien sélectionné</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" id="close-modal">Fermer la
+                                    fenêtre</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="insert-msg">
+
+                </div>
+
+                <div class="row content">
 
                     <div class="col-md-8 card card-rdv">
                         <div class="card-header text-white card-bg-rdv">
@@ -157,8 +180,9 @@
                     <div class="offset-md-1 col-md-3 card card-rdv">
                         <div class="card-header text-white card-bg-rdv">
                             Prenez votre rendez-vous en ligne
-                            <p class="card-text text-white" style="font-size: 12px;font-style: italic;">Créneau
-                                sélectionné: 00/00/00 à 00h00</p>
+                            <p class="card-text text-white" id="slot-reserved"
+                                style="font-size: 12px;font-style: italic;">Veuillez sélectionner un créneau de
+                                rendez-vous</p>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -181,13 +205,13 @@
                                 <li class="list-group-item item-rdv">
                                     <h5 class="card-title">Type de consultation</h5>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="rdv-type" checked>
+                                        <input class="form-check-input" value="0" type="radio" name="rdv-type" checked>
                                         <label class="form-check-label">
                                             Au cabinet du praticien
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" id="rdv-type-visio"
+                                        <input class="form-check-input" value="1" type="radio" id="rdv-type-visio"
                                             name="rdv-type">
                                         <label class="form-check-label">
                                             En visio-conférence
@@ -197,13 +221,14 @@
                                 <li class="list-group-item item-rdv">
                                     <h5 class="card-title">Motif du rendez-vous</h5>
                                     <p class="card-text">Indiquer en quelques mots la raison de votre rendez-vous</p>
-                                    <textarea class="form-control" rows="3"></textarea>
+                                    <textarea class="form-control" id="rdv-reason" rows="3"></textarea>
                                 </li>
 
 
                             </ul>
 
-                            <button type="button" class="btn btn-primary btn-confirm-rdv">Confirmer le
+                            <button type="button" class="btn btn-primary btn-confirm-rdv" id="rdv-create"
+                                onclick="checkSlotDispo()">Confirmer le
                                 rendez-vous</button>
 
                         </div>
