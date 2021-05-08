@@ -121,6 +121,36 @@ $("#close-modal").on("click", function () {
     $('#myModal').modal('hide');
 });
 
+function checkToken() {
+    if (sessionStorage.getItem("token") != null) {
+        $.ajax({
+            url: 'http://localhost:3000/api/auth/token/' + sessionStorage.getItem("token"),
+            type: 'GET',
+            dataType: 'html',
+            success: function (data, statut) {
+                const obj = JSON.parse(data);
+                if (obj.token == true) {
+                    if (sessionStorage.getItem("type") == 0) {
+                        $('#about').show();
+                        $('#load').hide();
+                        initDate();
+                    } else {
+                        window.location.href = '../dashboard/praticien/profil.html';
+                    }
+                } else {
+                    window.location.href = 'auth/auth.html';
+                }
+            },
+            error: function (result, statut, erreur) {
+                sendError("Une erreur s'est produite, veuillez réessayer");
+                $("#li-submit").prop("disabled", false);
+            }
+        });
+    } else {
+        window.location.href = 'auth/auth.html';
+    }
+}
+
 function getPrInfo() {
     const urlParams = new URLSearchParams(window.location.search);
     $.ajax({

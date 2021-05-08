@@ -24,7 +24,7 @@
     <link href="../assets/css/style.css" rel="stylesheet">
 </head>
 
-<body>
+<body onload="checkToken()">
 
     <header id="header" class="fixed-top d-flex align-items-center">
         <div class="container d-flex align-items-center justify-content-between">
@@ -55,7 +55,12 @@
             </div>
         </section>
 
-        <section id="auth" class="about">
+        <div class="text-center" id="load" style="margin-top: 100px; margin-bottom: 100px;">
+            <div class="spinner-border text-secondary" role="status">
+            </div>
+        </div>
+
+        <section id="auth" class="about" style="display: none;">
             <div class="container">
 
                 <div class="row alert alert-danger justify-content-center" id="error" role="alert" hidden></div>
@@ -231,7 +236,7 @@
     <script src="https://use.fontawesome.com/7a75d84eb1.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"
         integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-        
+
     <script src="js/main.js"></script>
     <script src="js/sha512.js"></script>
 

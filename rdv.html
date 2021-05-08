@@ -24,7 +24,7 @@
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
 
-<body onload="initDate()">
+<body onload="checkToken()">
 
     <header id="header" class="fixed-top d-flex align-items-center">
         <div class="container d-flex align-items-center justify-content-between">
@@ -62,7 +62,12 @@
             </div>
         </section>
 
-        <section id="about" class="about">
+        <div class="text-center" id="load" style="margin-top: 100px; margin-bottom: 100px;">
+            <div class="spinner-border text-secondary" role="status">
+            </div>
+        </div>
+
+        <section id="about" class="about" style="display: none;">
             <div class="container">
 
                 <div id="myModal" class="modal fade" role="dialog">

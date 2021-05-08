@@ -247,6 +247,38 @@ function sendError(error) {
   AUTH
 */
 
+function checkToken() {
+  if (sessionStorage.getItem("token") != null) {
+    $.ajax({
+      url: 'http://localhost:3000/api/auth/token/' + sessionStorage.getItem("token"),
+      type: 'GET',
+      dataType: 'html',
+      success: function (data, statut) {
+        const obj = JSON.parse(data);
+        if (obj.token == true) {
+          if (sessionStorage.getItem("type") == 0) {
+            window.location.href = '../dashboard/patient/profil.html';
+          } else {
+            // Redirection PR
+          }
+        } else {
+          sessionStorage.removeItem("token");
+          sessionStorage.removeItem("type");
+          $('#auth').show();
+          $('#load').hide();
+        }
+      },
+      error: function (result, statut, erreur) {
+        sendError("Une erreur s'est produite, veuillez réessayer");
+        $("#li-submit").prop("disabled", false);
+      }
+    });
+  } else {
+    $('#auth').show();
+    $('#load').hide();
+  }
+}
+
 function onConnect() {
   const email = $("#li-email").val();
   const password = $("#li-password").val();
@@ -266,15 +298,15 @@ function onConnect() {
       success: function (data, statut) {
         const obj = JSON.parse(data);
         if (obj.login == true) {
-          console.log("Connecté !");
-
-          let date = new Date();
 
           sessionStorage.setItem('token', obj.token);
           sessionStorage.setItem('type', obj.type);
-          sessionStorage.setItem('check', date);
 
-          // redirection 
+          if (obj.type == 0) {
+            window.location.href = '../dashboard/patient/profil.html';
+          } else {
+            // redirection PR
+          }
 
         } else {
           sendError("E-mail ou Mot de passe incorrect !");
