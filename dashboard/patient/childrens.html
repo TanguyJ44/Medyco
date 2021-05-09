@@ -11,15 +11,16 @@
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <link href="../style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
-    
+
     <title>Enfants patient | Medyco</title>
 
     <link href="../assets/favicon.png" rel="icon">
 </head>
 
-<body onload="checkToken()">
+<body onload="checkToken(2)">
     <header class="navbar navbar-white sticky-top bg-white p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><img id="logo" src="../assets/logo_BLEU.svg"></a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="../../index.html"><img id="logo"
+                src="../assets/logo_BLEU.svg"></a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -88,27 +89,63 @@
 
             <div class="infos col-md-8" id="dash-content" style="display: none;">
                 <div class="child-insert">
-                    <div class="card float-right">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <img class="d-block w-100" src="../assets/portrait.png" alt="">
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="card-block">
-                                    <h2 class="infos-users">Anatole DERVAL</h2>
-                                    <h4 class="infos-users">05/03/2000</h4>
-                                    <h4 class="infos-users">Homme</h4>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <button class="btn btn-sm float-left pos-btn">Supprimer <i
-                                        class="bi bi-trash"></i></button>
-                            </div>
+                    <h3 class="text-center" style="margin-top: 50px;">Vous n'avez pas déclaré d'enfant</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 child">
+                        <div class="btn-add-child" style="width: 120px;">
+                            <i class="add-child bi bi-plus-circle" onclick="childOpen()"></i>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8 child">
-                    <i class="add-child bi bi-plus-circle"></i>
+                <div class="modal fade" id="child-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Déclarer un nouvel enfant <i class="close-modal bi bi-x-circle"
+                                        onclick="childClose()"></i></h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>Veuillez renseigner les informations ci-dessous concernant votre enfant :</p>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Genre</span>
+                                    </div>
+                                    <select class="form-select" required>
+                                        <option value="0">Garçons</option>
+                                        <option value="1">Fille</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Prénom</span>
+                                    </div>
+                                    <input type="text" class="form-control" required>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Nom</span>
+                                    </div>
+                                    <input type="text" class="form-control" required>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Date de naissance</span>
+                                    </div>
+                                    <input type="date" class="form-control" required>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary">Ajouter</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
