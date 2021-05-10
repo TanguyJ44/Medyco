@@ -246,10 +246,6 @@ input::-webkit-inner-spin-button, input::-webkit-outer-spin-button {
     transition: border .25 ease-in-out;
 }
 
-/* .iban-card .content .iban-text:hover input, .iban-card .content .iban-text input:focus, .iban-card .content .bottom:hover input, .iban-card .content .bottom input:focus {
-    border: 1px solid #fff;
-} */
-
 .iban-card .content .bottom {
     display: flex;
     justify-content: space-between;
