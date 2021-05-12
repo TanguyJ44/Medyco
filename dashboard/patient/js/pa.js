@@ -1,9 +1,18 @@
-function modal() {
-    $('#fenetre_message').modal('show');
+function modal(id) {
+    $.each(rdvMsg, function (i, obj) {
+        if (obj.id == id) {
+            $('#msg-name').text(obj.name);
+            $('#msg-date').text(obj.date);
+            $('#msg-time').text(obj.time);
+            $('#remove-msg').prop("onclick", null).off("click");
+            $('#remove-msg').on("click", function () { removeMsg(obj.id); });
+        }
+    });
+    $('#msg-gui').modal('show');
 }
 
 function modal_Close() {
-    $('#fenetre_message').modal('hide');
+    $('#msg-gui').modal('hide');
 }
 
 function childOpen() {
@@ -47,16 +56,20 @@ function loadData(page) {
         case 1: // profil
             getUserInfo();
             getUserCreditCard();
+            getUserNextRDV();
             break;
         case 2: // childrens
             getUserChildren();
             break;
         case 3: // rdv
+            getUserRdv();
+            getUserLastRdv();
             break;
         case 4: // fav
             getFavPr();
             break;
         case 5: // msg
+            getUserMsg()
             break;
         case 6: // covid
             break;
@@ -99,6 +112,7 @@ function viewCardDetails() {
         $("#eye-card").removeClass("bi-eye-slash");
         $("#iban-2").val("");
         $("#iban-3").val("");
+        $("#cc-ccv").val("");
     } else {
         $("#eye-card").addClass("bi-eye-slash");
         $("#eye-card").removeClass("bi-eye");
@@ -106,6 +120,7 @@ function viewCardDetails() {
             const hideNumCard = numCard.split('-');
             $("#iban-2").val(hideNumCard[1]);
             $("#iban-3").val(hideNumCard[2]);
+            $("#cc-ccv").val(ccvCard);
         }
     }
 
@@ -130,6 +145,7 @@ function updateCardDetails() {
             const hideNumCard = numCard.split('-');
             $("#iban-2").val(hideNumCard[1]);
             $("#iban-3").val(hideNumCard[2]);
+            $("#cc-ccv").val(ccvCard);
         }
     } else {
         $("#edit-card").addClass("bi-pencil");
@@ -226,7 +242,12 @@ function formatDate(reqDate) {
     return df1 + "/" + df2 + "/" + date.getFullYear();
 }
 
+function formatTime(reqTime) {
+    return reqTime.substring(0, 5).replace(":", "h");
+}
+
 var numCard = null;
+var ccvCard = null;
 
 function getUserCreditCard() {
     $.ajax({
@@ -238,6 +259,8 @@ function getUserCreditCard() {
                 const result = JSON.parse(data);
 
                 numCard = result.num;
+                ccvCard = result.ccv;
+
                 const hideNumCard = numCard.split('-');
 
                 $("#iban-1").val(hideNumCard[0]);
@@ -246,7 +269,7 @@ function getUserCreditCard() {
                 $("#iban-4").val(hideNumCard[3]);
                 $("#cc-name").val(result.name);
                 $("#cc-date").val(result.date);
-                $("#cc-ccv").val(result.ccv);
+                $("#cc-ccv").val("");
             }
         },
         error: function (result, statut, erreur) {
@@ -288,6 +311,27 @@ function updateUserCreditCard() {
     } else {
         document.location.reload();
     }
+}
+
+function getUserNextRDV() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pa/' + sessionStorage.getItem('token') + '/next-rdv',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).nextRdv == null) {
+                $("#history-insert").empty();
+                $.each(JSON.parse(data), function (i, obj) {
+                    for (let j = 0; j < obj.length; j++) {
+                        $("#history-insert").append("<p class='histo'>" + formatDate(obj[j].date) + " " + formatTime(obj[j].time) + " - " + obj[j].name + " - " + obj[j].specialties + "</p>");
+                    }
+                });
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
 }
 
 function getUserChildren() {
@@ -357,6 +401,14 @@ function removeUserChildren(id) {
     });
 }
 
+function getUserRdv() {
+
+}
+
+function getUserLastRdv() {
+
+}
+
 function getFavPr() {
     $.ajax({
         url: 'http://localhost:3000/api/favorite/' + sessionStorage.getItem('token'),
@@ -391,6 +443,44 @@ function removeFavPr(prId) {
                 getFavPr();
             } else {
                 window.location.href = 'profil.html';
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+var rdvMsg = null;
+function getUserMsg() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pa/' + sessionStorage.getItem('token') + '/msg',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).msg != false) {
+                $("#insert-msg").empty();
+                rdvMsg = JSON.parse(data);
+                $.each(JSON.parse(data), function (i, obj) {
+                    $("#insert-msg").append("<div class='messages-card' data-toggle='modal' data-target='#msg-gui'><i class='bi bi-chat-square-quote'></i><div class='row' onclick='modal(" + obj.id + ")'><label class='form-check-label'>Votre rendez-vous avec " + obj.name + " à été annulé ! <span style='float:right;margin-right:40px;font-style:italic;color:gray;'>Cliquer sur ce message pour l'ouvrir</span></label></div></div>");
+                });
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function removeMsg(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/pa/' + sessionStorage.getItem('token') + '/remove/msg/' + id,
+        type: 'DELETE',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).removeMsg != false) {
+                modal_Close();
+                document.location.reload();
             }
         },
         error: function (result, statut, erreur) {
