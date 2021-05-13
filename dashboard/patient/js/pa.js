@@ -412,9 +412,28 @@ function getUserRdv() {
                 $.each(JSON.parse(data), function (i, obj) {
                     for (let j = 0; j < obj.length; j++) {
                         let rdvType = obj[j].type == 0 ? "Consultation au cabinet" : "Consultation en visioconférence";
-                        $("#rdv-insert").append("<div class='card current-rdv float-right'><div class='row rdv-infos'><div class='col-sm-7'><p>Rendez-vous le <span class='date-rdv'>" + formatDate(obj[j].date) + "</span> à <span class='date-rdv'>" + formatTime(obj[j].time) + "</span></p><p>" + obj[j].name + "</p><p>" + obj[j].specialties + "</p><p>" + obj[j].address + ", " + obj[j].zipcode + " " + obj[j].city + "</p></div><div class='col-sm-3'><h5 class='contact-doctor'>Informations</h5><p class='phone-doctor'>" + rdvType + "</p><p class='mail-doctor'>" + obj[j].email + "</p></div><div class='icon-annuler-rdv col-sm-2'><button class='btn btn-sm float-left pos-btn'>Annuler</button></div></div></div>");
+                        $("#rdv-insert").append("<div class='card current-rdv float-right'><div class='row rdv-infos'><div class='col-sm-7'><p>Rendez-vous le <span class='date-rdv'>" + formatDate(obj[j].date) + "</span> à <span class='date-rdv'>" + formatTime(obj[j].time) + "</span></p><p>" + obj[j].name + "</p><p>" + obj[j].specialties + "</p><p>" + obj[j].address + ", " + obj[j].zipcode + " " + obj[j].city + "</p></div><div class='col-sm-3'><h5 class='contact-doctor'>Informations</h5><p class='phone-doctor'>" + rdvType + "</p><p class='mail-doctor'>" + obj[j].email + "</p></div><div class='icon-annuler-rdv col-sm-2'><button class='btn btn-sm float-left pos-btn' id='cancel-rdv-" + obj[j].id + "' onclick='removeUserRdv(" + obj[j].id + ")'>Annuler</button></div></div></div>");
                     }
                 });
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function removeUserRdv(id) {
+    $("#cancel-rdv-" + id).empty();
+    $.ajax({
+        url: 'http://localhost:3000/api/pa/' + sessionStorage.getItem('token') + '/remove/rdv/' + id,
+        type: 'DELETE',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).removeRdv == true) {
+                document.location.reload();
+            } else {
+                window.location.href = 'profil.html';
             }
         },
         error: function (result, statut, erreur) {
