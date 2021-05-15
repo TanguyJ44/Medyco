@@ -35,15 +35,14 @@ function checkToken(page) {
                     if (sessionStorage.getItem("type") == 0) {
                         loadData(page);
                     } else {
-                        window.location.href = '../dashboard/praticien/profil.html';
+                        window.location.href = '../praticien/profil.html';
                     }
                 } else {
                     window.location.href = '../../auth/auth.html';
                 }
             },
             error: function (result, statut, erreur) {
-                sendError("Une erreur s'est produite, veuillez réessayer");
-                $("#li-submit").prop("disabled", false);
+                console.log(erreur);
             }
         });
     } else {

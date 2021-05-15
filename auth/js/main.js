@@ -305,7 +305,7 @@ function onConnect() {
           if (obj.type == 0) {
             window.location.href = '../dashboard/patient/profil.html';
           } else {
-            // redirection PR
+            window.location.href = '../dashboard/praticien/profil.html';
           }
 
         } else {

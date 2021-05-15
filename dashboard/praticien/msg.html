@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link href="../style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+
+    <title>Mes messages | Medyco</title>
+
+    <link href="../assets/favicon.png" rel="icon">
+</head>
+
+<body onload="checkToken(4)">
+    <header class="navbar navbar-white sticky-top bg-white p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="../../index.html"><img id="logo"
+                src="../assets/logo_BLEU.svg"></a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="bi bi-list"></i>
+        </button>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="header-dashboard">
+                    <h3>Dashboard</h3>
+                </div>
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="profil.html">
+                                <i class="bi bi-person-lines-fill"></i> Mon profil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="agenda.html">
+                                <i class="bi bi-calendar-date"></i> Mon agenda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="patients.html">
+                                <i class="bi bi-people"></i></span> Mes patients
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="color-menu" class="nav-link" href="msg.html">
+                                <i class="bi bi-chat-right-dots"></i> Mes messages
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="accounting.html">
+                                <i class="bi bi-graph-up"></i> Ma comptabilité
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-item logout">
+                    <a class="nav-link" href="#" onclick="logout()">
+                        <i class="bi bi-box-arrow-left"></i> Déconnexion
+                    </a>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="rdv col-md-9 text-center" id="load" style="margin-top: 100px;">
+                <div class="spinner-border text-secondary" role="status">
+                </div>
+            </div>
+
+            <div class="rdv col-md-9" id="dash-content" style="display: none;">
+                <div class="title-rdv">
+                    <h2>Mes messages</h2>
+                </div>
+
+                <div id="insert-msg">
+                    <p class="text-center" style="margin-top: 40px;">Vous n'avez pas de nouveau message</p>
+                    <!-- <div class='messages-card' data-toggle='modal' data-target='#msg-gui'>
+                        <i class='bi bi-chat-square-quote'></i>
+                        <div class='row' onclick='modalMsg()'>
+                            <label class='form-check-label'>Votre rendez-vous avec [obj.name] à été annulé !
+                                <span style='float:right;margin-right:40px;font-style:italic;color:gray;'>Cliquer sur ce
+                                    message pour l'ouvrir</span>
+                            </label>
+                        </div>
+                    </div> -->
+                </div>
+
+                <div class="modal fade" id="msg-gui" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Rendez-vous annulé <i class="close-modal bi bi-x-circle"
+                                        onclick="modalCloseMsg()"></i></h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>Bonjour,
+                                    <br><br>Nous vous informons que le patient <span id="msg-name"
+                                        style="font-weight: bold;">nom prenom</span> à annulé son rendez-vous du <span
+                                        id="msg-date" style="font-weight: bold;">date</span> à <span id="msg-time"
+                                        style="font-weight: bold;">time</span>.
+                                    <br>Ce patient a toujours la possibilité de reprendre rendez-vous sur un autre créneau.
+                                    <br><br>Toute l'équipe Medyco vous remercie d'utiliser notre plateforme !
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="remove-msg">Supprimer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="modal fade" id="fenetre_message" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">RDV annulé <i class="close-modal bi bi-x-circle"
+                                        onclick="modal_Close()"></i></h5>
+                            </div>
+                            <div class="modal-body">
+                                Bonjour,<br><br> le doctor nom prenom à annulé votre rendez-vous du date, pour reprendre
+                                rendez-vous, veuillez retourner sur la page de votre médecin ! <br><br>Toute l'équipe
+                                Medyco vous remercie d'utiliser la plateforme
+                                !
+                            </div>
+                            <div class="modal-footer">
+                                <a class="lien-moda-annu" href="#">Pour en savoir plus sur les modalités d'annulations,
+                                    cliquez ici !</a>
+                                <button type="button" class="btn btn-primary">Supprimer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        <script src="js/pr.js"></script>
+</body>
+
+</html>
