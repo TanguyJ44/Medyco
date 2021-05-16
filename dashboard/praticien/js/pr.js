@@ -50,8 +50,10 @@ function loadData(page) {
         case 3: // patients
             break;
         case 4: // msg
+            getUserMsg();
             break;
         case 5: // accounting
+            getUserTodayRdv();
             break;
         default:
             break;
@@ -120,12 +122,79 @@ function displayDate() {
     $('#rdv-date-day6').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
 }
 
-function modalMsg() {
+function modalMsg(id) {
+    $.each(rdvMsg, function (i, obj) {
+        if (obj.id == id) {
+            $('#msg-name').text(obj.name);
+            $('#msg-date').text(obj.date);
+            $('#msg-time').text(obj.time);
+            $('#remove-msg').prop("onclick", null).off("click");
+            $('#remove-msg').on("click", function () { removeMsg(obj.id); });
+        }
+    });
     $('#msg-gui').modal('show');
 }
 
 function modalCloseMsg() {
     $('#msg-gui').modal('hide');
+}
+
+var rdvMsg = null;
+function getUserMsg() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/msg',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).msg != false) {
+                $("#insert-msg").empty();
+                rdvMsg = JSON.parse(data);
+                $.each(JSON.parse(data), function (i, obj) {
+                    $("#insert-msg").append("<div class='messages-card' data-toggle='modal' data-target='#msg-gui'><i class='bi bi-chat-square-quote'></i><div class='row' onclick='modalMsg(" + obj.id + ")'><label class='form-check-label'>Votre rendez-vous avec " + obj.name + " à été annulé ! <span style='float:right;margin-right:40px;font-style:italic;color:gray;'>Cliquer sur ce message pour l'ouvrir</span></label></div></div>");
+                });
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function removeMsg(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/remove/msg/' + id,
+        type: 'DELETE',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).removeMsg != false) {
+                modalCloseMsg();
+                document.location.reload();
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function getUserTodayRdv() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/today-rdv',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).todayRdv != false) {
+                $("#insert-today-consult").empty();
+                $.each(JSON.parse(data), function (i, obj) {
+                    let msgDate = new Date(obj.date);
+                    $("#insert-today-consult").append("<p class='histo-patient'>" + ('00' + msgDate.getDate()).slice(-2) + "/" + ('00' + (msgDate.getMonth() + 1)).slice(-2) + "/" + msgDate.getFullYear() + " " + obj.time.substring(0, 5).replace(":", "h") + " - " + obj.firstname.charAt(0).toUpperCase() + obj.firstname.substring(1) + " " + obj.lastname.toUpperCase() + "</p>");
+                });
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
 }
 
 function sendConsult() {
