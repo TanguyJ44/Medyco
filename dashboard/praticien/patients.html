@@ -90,32 +90,30 @@
                                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                             </div>
                             <input type="text" class="form-control" id="search-patient"
-                                placeholder="Rechercher un patient">
+                                placeholder="Rechercher un patient" disabled>
                         </div>
                         <div class="scroll-patient" id="insert-patient">
                             <p class="text-center">Vous n'avez pas encore de patient</p>
-                            <!-- <p class="patient-name"><i class="bi bi-person-lines-fill"></i> Anatole Derval</p> -->
                         </div>
                     </div>
                     <div class="card col-md-6 fiche-patient">
                         <h2 class="title-patient">Fiche patient</h2>
-                        <p class="text-center" id="no-patient" style="margin-top: 20px;">Cliquer sur un patient pour obtenir plus de détails</p>
+                        <p class="text-center" id="no-patient" style="margin-top: 20px;">Cliquer sur un patient pour
+                            obtenir plus de détails</p>
                         <div id="view-patient-details" hidden>
                             <div class="row img-infos-patient">
                                 <div class="col-md-4">
                                     <img class="d-block" id="pa-info-img" src="../assets/man.png" style="width: 140px;">
                                 </div>
                                 <div class="col-md-8">
-                                    <h3 class="name-fiche" id="pa-info-name">Anatole DERVAL</h3>
-                                    <h4 id="pa-info-birth">05/03/2000</h4>
-                                    <h4 id="pa-info-gender">Homme</h4>
-                                    <h5 id="pa-info-email">derval.anatole@gmail.com</h5>
+                                    <h3 class="name-fiche" id="pa-info-name">-</h3>
+                                    <h4 id="pa-info-birth">-</h4>
+                                    <h4 id="pa-info-gender">-</h4>
+                                    <h5 id="pa-info-email">-</h5>
                                 </div>
                             </div>
                             <h5 class="last-consult">Dernières consultations</h5>
                             <div class="ajout-consult-info" id="old-consult-insert">
-                                <p class="consult-view"><i class="bi bi-file-earmark-person"></i>
-                                    22/04/2020-Controle-Simple</p>
                             </div>
                             <button class="btn btn-ordonnance" onclick="execAppli()">Ordonnance et facture <i
                                     class="bi bi-pencil"></i></button>

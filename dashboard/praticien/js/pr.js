@@ -9,7 +9,7 @@ function modal_Close() {
 }
 
 function execAppli() {
-    window.location.href = "mailto:adresse@email.com?body=Voici votre facture et vos ordonnances en pièce jointes ! passé une agréable journée";
+    window.location.href = "mailto:" + paSelectEmail + "?body=Voici votre facture et vos ordonnances en pièce jointes ! passé une agréable journée";
 }
 
 function checkToken(page) {
@@ -48,6 +48,7 @@ function loadData(page) {
             displayDate();
             break;
         case 3: // patients
+            getPaList();
             break;
         case 4: // msg
             getUserMsg();
@@ -120,6 +121,104 @@ function displayDate() {
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day6').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day6').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+}
+
+var listPa = null;
+function getPaList() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/pa-list',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).paList != false) {
+                $("#insert-patient").empty();
+                listPa = JSON.parse(data);
+                $.each(JSON.parse(data), function (i, obj) {
+                    $("#insert-patient").append("<p class='patient-name' onclick='getPaInfo(" + obj.id + ")')><i class='bi bi-person-lines-fill'></i> " + obj.firstname.charAt(0).toUpperCase() + obj.firstname.substring(1) + " " + obj.lastname.toUpperCase() + "</p>");
+                });
+                $("#search-patient").prop("disabled", false);
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+$("#search-patient").on('input', function (event) {
+    let paNotFound = false;
+
+    $("#insert-patient").empty();
+    if ($(this).val().length > 0) {
+        $.each(listPa, function (i, obj) {
+            if (obj.firstname.indexOf($("#search-patient").val()) != -1 || obj.lastname.indexOf($("#search-patient").val()) != -1) {
+                $("#insert-patient").append("<p class='patient-name' onclick='getPaInfo(" + obj.id + ")')><i class='bi bi-person-lines-fill'></i> " + obj.firstname.charAt(0).toUpperCase() + obj.firstname.substring(1) + " " + obj.lastname.toUpperCase() + "</p>");
+                paNotFound = true;
+            }
+        });
+        if (paNotFound == false) {
+            $("#insert-patient").append("<p class='text-center'>Aucun patient trouvé</p>");
+        }
+    } else {
+        $.each(listPa, function (i, obj) {
+            $("#insert-patient").append("<p class='patient-name' onclick='getPaInfo(" + obj.id + ")')><i class='bi bi-person-lines-fill'></i> " + obj.firstname.charAt(0).toUpperCase() + obj.firstname.substring(1) + " " + obj.lastname.toUpperCase() + "</p>");
+        });
+    }
+});
+
+var paSelectEmail = null;
+function getPaInfo(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/pa-info/' + id,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).paInfo != false) {
+                const result = JSON.parse(data);
+                const gender = result[0].gender == 0 ? "Homme" : "Femme";
+
+                if (result[0].gender == 0) {
+                    $("#pa-info-img").attr('src', '../assets/man.png');
+                } else {
+                    $("#pa-info-img").attr('src', '../assets/woman.png');
+                }
+
+                $("#pa-info-name").text(result[0].firstname.charAt(0).toUpperCase() + result[0].firstname.substring(1) + " " + result[0].lastname.toUpperCase());
+                $("#pa-info-birth").text(formatDate(result[0].birthDate));
+                $("#pa-info-gender").text(gender);
+                $("#pa-info-email").text(result[0].email);
+
+                paSelectEmail = result[0].email;
+
+                getPaRdv(id);
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function getPaRdv(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/pa-rdv/' + id,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).paRdv != false) {
+                $("#old-consult-insert").empty();
+                $.each(JSON.parse(data), function (i, obj) {
+                    let rdvType = obj.type == 0 ? "consultation au cabinet" : "consultation en visioconférence";
+                    $("#old-consult-insert").append("<p class='consult-view'><i class='bi bi-file-earmark-person'></i>" + formatDate(obj.date) + " à " + obj.time.substring(0, 5).replace(":", "h") + " - " + rdvType + "</p>");
+                });
+                $("#no-patient").empty();
+                $("#view-patient-details").removeAttr('hidden');
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
 }
 
 function modalMsg(id) {
@@ -221,6 +320,23 @@ function logout() {
             console.log("Error !");
         }
     });
+}
+
+function formatDate(reqDate) {
+    const date = new Date(reqDate);
+    let df1 = date.getDate();
+    let df2 = date.getMonth();
+
+    if (df1 < 10) {
+        df1 = "0" + df1;
+    }
+
+    df2 += 1;
+    if (df2 < 10) {
+        df2 = "0" + df2;
+    }
+
+    return df1 + "/" + df2 + "/" + date.getFullYear();
 }
 
 function getDayName(day) {
