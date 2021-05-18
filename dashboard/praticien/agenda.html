@@ -129,16 +129,16 @@
                             </div>
                             <div class="row">
 
-                                <div class="offset-md-5 col-md-1" id="rdv-load" style="display: none;">
+                                <div class="offset-md-5 col-md-1" id="rdv-load">
                                     <div class="spinner-border text-secondary" style="margin-left: 90%;">
                                     </div>
                                 </div>
 
-                                <div class="offset-md-1 col-md-10" id="rdv-slots">
+                                <div class="offset-md-1 col-md-10" id="rdv-slots" style="display: none;">
                                     <div class="row">
 
                                         <div class="col-md-2" id="rdv-col-1">
-                                            <button type="button" class="btn btn-primary" data-id="rdv-btn" id="" onclick="selectRdvSlot()">10h15 <br> <i class="bi bi-camera-video"></i></button>
+
                                         </div>
                                         <div class="col-md-2" id="rdv-col-2">
 
@@ -162,6 +162,27 @@
                         </div>
                     </div>
 
+                </div>
+                <div class="modal fade" id="info-rdv" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Détails de votre rendez-vous <i class="close-modal bi bi-x-circle"
+                                        onclick="modalCloseRdv()"></i></h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>Vous avez rendez-vous le <span id="rdvinfo-date" style="font-weight: bold;">-</span> à <span id="rdvinfo-time" style="font-weight: bold;">-</span><br>
+                                Avec <span id="rdvinfo-name" style="font-weight: bold;">-</span><br><br>
+                                <span id="rdvinfo-type">-</span><br>
+                                <span id="rdvinfo-consulted">-</span><br><br>
+                                Raison du rendez-vous : <span id="rdvinfo-reason">-</span><br><br>
+                                <span id="rdvinfo-children">-</span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="remove-rdv">Annuler le rendez-vous</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 var refDate = null;
+var slotsDate = [];
 
 function modal() {
     $('#valid-med').modal('show');
@@ -6,6 +7,10 @@ function modal() {
 
 function modal_Close() {
     $('#valid-med').modal('hide');
+}
+
+function modalCloseRdv() {
+    $('#info-rdv').modal('hide');
 }
 
 function execAppli() {
@@ -101,26 +106,118 @@ function displayDate() {
 
     $('#rdv-day1').text(getDayName(refDate.getDay()));
     $('#rdv-date-day1').text(refDate.getDate() + " " + getMonthName(refDate.getMonth()));
+    saveAllCurrentDate(refDate.getFullYear(), refDate.getMonth(), refDate.getDate());
 
     nextDay.setDate(refDate.getDate() + 1);
     $('#rdv-day2').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day2').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day3').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day3').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day4').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day4').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day5').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day5').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     nextDay.setDate(nextDay.getDate() + 1);
     $('#rdv-day6').text(getDayName(nextDay.getDay()));
     $('#rdv-date-day6').text(nextDay.getDate() + " " + getMonthName(nextDay.getMonth()));
+    saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
+
+    getDateRdvSlot(0);
+}
+
+function getDateRdvSlot(index) {
+    $("#rdv-load").show();
+    $("#rdv-slots").hide();
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/rdv-slot/' + slotsDate[index],
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            $("#rdv-col-" + (index + 1)).empty();
+            if (JSON.parse(data).rdvSlot != false) {
+                $.each(JSON.parse(data), function (i, obj) {
+                    let rdvType = obj.type == 0 ? "bi-people" : "bi-camera-video";
+                    $("#rdv-col-" + (index + 1)).append("<button type='button' class='btn btn-primary' data-id='rdv-btn' onclick='getRdvInfo(" + obj.id + ")'>" + obj.time.substring(0, 5).replace(":", "h") + " <br> <i class='bi " + rdvType + "'></i></button>");
+                });
+            }
+            if (index < 5) {
+                getDateRdvSlot(index + 1)
+            } else {
+                $("#rdv-load").hide();
+                $("#rdv-slots").show();
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function getRdvInfo(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/rdv-info/' + id,
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).rdvInfo != false) {
+                const result = JSON.parse(data);
+
+                $('#rdvinfo-date').text(formatDate(result[0].date));
+                $('#rdvinfo-time').text(result[0].time.substring(0, 5).replace(":", "h"));
+                $('#rdvinfo-name').text(result[0].firstname.charAt(0).toUpperCase() + result[0].firstname.substring(1) + " " + result[0].lastname.toUpperCase());
+                if (result[0].type == 0) {
+                    $('#rdvinfo-type').text("Consultation au cabinet");
+                } else {
+                    $('#rdvinfo-type').text("Consultation en visioconférence");
+                }
+                if (result[0].consulted == 0) {
+                    $('#rdvinfo-consulted').text("Ce patient consulte chez vous pour la première fois");
+                } else {
+                    $('#rdvinfo-consulted').text("Ce patient a déjà consulté chez vous");
+                }
+                $('#rdvinfo-reason').text(result[0].reason);
+                if (result[0].patientId.length < 40) {
+                    $('#rdvinfo-children').text("Ce rendez-vous concerne l'enfant du patient : " + result[0].patientId.toUpperCase());
+                } else {
+                    $('#rdvinfo-children').text("");
+                }
+
+                $('#remove-rdv').on("click", function () { removeRdv(id); });
+                $('#info-rdv').modal('show');
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function removeRdv(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/remove/rdv/' + id,
+        type: 'DELETE',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).removeRdv != false) {
+                $('#info-rdv').modal('hide');
+                document.location.reload();
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
 }
 
 var listPa = null;
@@ -337,6 +434,25 @@ function formatDate(reqDate) {
     }
 
     return df1 + "/" + df2 + "/" + date.getFullYear();
+}
+
+function saveAllCurrentDate(year, month, date) {
+    let formatMonth = null;
+    let formatDate = null;
+
+    formatMonth = month + 1;
+
+    if (formatMonth < 10) {
+        formatMonth = "0" + formatMonth;
+    }
+
+    if (date < 10) {
+        formatDate = "0" + date;
+    } else {
+        formatDate = date;
+    }
+
+    slotsDate.push(year + "-" + formatMonth + "-" + formatDate);
 }
 
 function getDayName(day) {
