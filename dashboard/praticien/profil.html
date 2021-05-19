@@ -90,21 +90,21 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card-block">
-                                <h2 class="name-med infos-med" id="user-name">Dr. Anatole DERVAL</h2>
-                                <h5 class="infos-med" id="user-birth">05/03/2000</h5>
-                                <h5 class="infos-med" id="user-gender">Homme</h5>
+                                <h2 class="name-med infos-med" id="user-name">-</h2>
+                                <h4 class="infos-med" id="user-gender">-</h4>
+                                <h5 class="infos-med" id="user-rpps" style="color: gray;">-</h5>
                                 <h4 class="title-spe">Spécialités</h4>
-                                <h6>↪ <input id="user-spe" type="text" value="Dentiste" disabled></h6>
+                                <h6>↪ <input id="user-spe" type="text" value="-" style="height: 25px;" disabled></h6>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <h3 id="title-contact">Contacts</h3>
-                            <input class="contact-users" id="user-email" type="email" value="derval.anatole@gmail.com"
+                            <input class="contact-users" id="user-email" type="email" value="-"
                                 disabled>
-                            <input class="contact-users" id="user-address" type="text" value="64 route de Clisson"
+                            <input class="contact-users" id="user-address" type="text" value="-"
                                 disabled>
-                            <p><input class="contact-users" id="user-zipcode" style="width: 60px;" type="number" value="44200" disabled><input
-                                    class="contact-users" id="user-city" style="width: calc(100% - 98px); margin-left: 5px;" type="text" value="Nantes" disabled></p>
+                            <p><input class="contact-users" id="user-zipcode" style="width: 60px;" type="number" value="00000" disabled><input
+                                    class="contact-users" id="user-city" style="width: calc(100% - 98px); margin-left: 5px;" type="text" value="-" disabled></p>
                         </div>
                         <div class="col-sm-1">
                             <button class="btn btn-sm float-left pos-btn" id="update-userinfo" onclick="updateUserInfo()">Modifier</button>
@@ -151,10 +151,10 @@
                             <input class="align-input" id="sundayPM" type="time">
                         </div>
                         <div class="col-md-3 text-center">
-                            <input class="align-input" type="number" id="work-time"
+                            <input class="align-input text-center" type="number" id="work-time"
                                 placeholder="Durée en minutes (ex: 15)">
                                 <div class="alert alert-success" role="alert" id="save-alert" style="display: none;"><i class="bi bi-check-circle"></i> Sauvegarde réussie</div>
-                            <button class="btn btn-sm" id="save-btn" onclick="saveWorkDay()">Sauvegarder <i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm" id="save-btn-wt" onclick="updateWorkTime()">Sauvegarder <i class="bi bi-pencil"></i></button>
                         </div>
 
                     </div>

@@ -1,5 +1,6 @@
 var refDate = null;
 var slotsDate = [];
+var newWorkTime = true;
 
 function modal() {
     $('#valid-med').modal('show');
@@ -47,6 +48,8 @@ function checkToken(page) {
 function loadData(page) {
     switch (page) {
         case 1: // profil
+            getUserInfo();
+            getWorkTime();
             break;
         case 2: // agenda
             refDate = new Date();
@@ -78,11 +81,8 @@ function updateUserInfo() {
         $('#user-spe, .contact-users').css({ "border": "none" });
         $('#user-spe, .contact-users').prop('disabled', true);
         $('#update-userinfo').text("Modifier");
+        changeUserInfo();
     }
-}
-
-function saveWorkDay() {
-    $('#save-alert').show();
 }
 
 function changeDate(type) {
@@ -134,6 +134,151 @@ function displayDate() {
     saveAllCurrentDate(nextDay.getFullYear(), nextDay.getMonth(), nextDay.getDate());
 
     getDateRdvSlot(0);
+}
+
+function getUserInfo() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/info',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).userInfo != false) {
+                const result = JSON.parse(data);
+
+                if (result[0].gender == 0) {
+                    $("#user-img").attr('src', '../assets/man-doctor.png');
+                    $('#user-gender').text("Homme");
+                } else {
+                    $("#user-img").attr('src', '../assets/woman-doctor.png');
+                    $('#user-gender').text("Femme");
+                }
+                $('#user-name').text("Dr. " + result[0].name);
+                $('#user-rpps').text("RPPS " + result[0].RPPS);
+                $('#user-spe').val(result[0].specialties);
+                $('#user-email').val(result[0].email);
+                $('#user-address').val(result[0].address);
+                $('#user-zipcode').val(result[0].zipcode);
+                $('#user-city').val(result[0].city);
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function changeUserInfo() {
+    if ($("#user-spe").val().length > 1 && $("#user-email").val().length > 1 && $("#user-address").val().length > 1 && $("#user-zipcode").val().length == 5 && $("#user-city").val().length > 1) {
+        if ($("#user-email").val().match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i)) {
+            $("#update-userinfo").prop("disabled", true);
+            $.ajax({
+                url: 'http://localhost:3000/api/pr/update/info',
+                data: {
+                    token: sessionStorage.getItem('token'),
+                    spe: $("#user-spe").val(),
+                    email: $("#user-email").val(),
+                    address: $("#user-address").val(),
+                    zipcode: $("#user-zipcode").val(),
+                    city: $("#user-city").val()
+                },
+                type: 'PUT',
+                dataType: 'html',
+                success: function (data, statut) {
+                    if (JSON.parse(data).updateInfo == true) {
+                        $("#update-userinfo").prop("disabled", false);
+                        getUserInfo();
+                    } else {
+                        document.location.reload();
+                    }
+                },
+                error: function (result, statut, erreur) {
+                    console.log("Error !");
+                }
+            });
+        } else {
+            document.location.reload();
+        }
+    } else {
+        document.location.reload();
+    }
+}
+
+function getWorkTime() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/work-time',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).workTime != false) {
+                const result = JSON.parse(data);
+
+                $('#mondayAM').val(result[0].mondayAM);
+                $('#mondayPM').val(result[0].mondayPM);
+                $('#tuesdayAM').val(result[0].tuesdayAM);
+                $('#tuesdayPM').val(result[0].tuesdayPM);
+                $('#wednesdayAM').val(result[0].wednesdayAM);
+                $('#wednesdayPM').val(result[0].wednesdayPM);
+                $('#thursdayAM').val(result[0].thursdayAM);
+                $('#thursdayPM').val(result[0].thursdayPM);
+                $('#fridayAM').val(result[0].fridayAM);
+                $('#fridayPM').val(result[0].fridayPM);
+                $('#saturdayAM').val(result[0].saturdayAM);
+                $('#saturdayPM').val(result[0].saturdayPM);
+                $('#sundayAM').val(result[0].sundayAM);
+                $('#sundayPM').val(result[0].sundayPM);
+                $('#work-time').val(result[0].meetingTime.substring(3, 5));
+                
+                newWorkTime = false;
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function updateWorkTime() {
+    if ($("#work-time").val().length > 0 && $("#work-time").val() > 4 && $("#work-time").val() < 60) {
+        $("#save-btn-wt").prop("disabled", true);
+        $.ajax({
+            url: 'http://localhost:3000/api/pr/update/work-time',
+            data: {
+                token: sessionStorage.getItem('token'),
+                newData: newWorkTime,
+                mondayAM: $('#mondayAM').val(),
+                mondayPM: $('#mondayPM').val(),
+                tuesdayAM: $('#tuesdayAM').val(),
+                tuesdayPM: $('#tuesdayPM').val(),
+                wednesdayAM: $('#wednesdayAM').val(),
+                wednesdayPM: $('#wednesdayPM').val(),
+                thursdayAM: $('#thursdayAM').val(),
+                thursdayPM: $('#thursdayPM').val(),
+                fridayAM: $('#fridayAM').val(),
+                fridayPM: $('#fridayPM').val(),
+                saturdayAM: $('#saturdayAM').val(),
+                saturdayPM: $('#saturdayPM').val(),
+                sundayAM: $('#sundayAM').val(),
+                sundayPM: $('#sundayPM').val(),
+                workTime: $('#work-time').val()
+            },
+            type: 'PUT',
+            dataType: 'html',
+            success: function (data, statut) {
+                if (JSON.parse(data).updateWorkTime == true) {
+                    $("#save-btn-wt").prop("disabled", false);
+                    $('#save-alert').show();
+                    getWorkTime();
+                } else {
+                    document.location.reload();
+                }
+            },
+            error: function (result, statut, erreur) {
+                console.log("Error !");
+            }
+        });
+    } else {
+        document.location.reload();
+    }
 }
 
 function getDateRdvSlot(index) {
