@@ -75,11 +75,11 @@ function loadData(page) {
 function updateUserInfo() {
     if ($('#update-userinfo').text().indexOf("Modifier") != -1) {
         $('#user-spe, .contact-users').css({ "border": "solid", "border-width": "1px" });
-        $('#user-spe, .contact-users').prop('disabled', false);
+        $('#user-spe, #user-visio, .contact-users').prop('disabled', false);
         $('#update-userinfo').text("Sauvegarder");
     } else {
         $('#user-spe, .contact-users').css({ "border": "none" });
-        $('#user-spe, .contact-users').prop('disabled', true);
+        $('#user-spe, #user-visio, .contact-users').prop('disabled', true);
         $('#update-userinfo').text("Modifier");
         changeUserInfo();
     }
@@ -156,6 +156,11 @@ function getUserInfo() {
                 $('#user-rpps').text("RPPS " + result[0].RPPS);
                 $('#user-spe').val(result[0].specialties);
                 $('#user-email').val(result[0].email);
+                if (result[0].visio == 0) {
+                    $('#user-visio').prop( "checked", false );
+                } else {
+                    $('#user-visio').prop( "checked", true );
+                }
                 $('#user-address').val(result[0].address);
                 $('#user-zipcode').val(result[0].zipcode);
                 $('#user-city').val(result[0].city);
@@ -171,6 +176,12 @@ function changeUserInfo() {
     if ($("#user-spe").val().length > 1 && $("#user-email").val().length > 1 && $("#user-address").val().length > 1 && $("#user-zipcode").val().length == 5 && $("#user-city").val().length > 1) {
         if ($("#user-email").val().match(/[a-z0-9_\-\.]+@[a-z0-9_\-\.]+\.[a-z]+/i)) {
             $("#update-userinfo").prop("disabled", true);
+            let visioValue = null;
+            if ($("#user-visio").prop('checked') == true) {
+                visioValue = 1;
+            } else {
+                visioValue = 0;
+            }
             $.ajax({
                 url: 'http://localhost:3000/api/pr/update/info',
                 data: {
@@ -179,7 +190,8 @@ function changeUserInfo() {
                     email: $("#user-email").val(),
                     address: $("#user-address").val(),
                     zipcode: $("#user-zipcode").val(),
-                    city: $("#user-city").val()
+                    city: $("#user-city").val(),
+                    visio: visioValue
                 },
                 type: 'PUT',
                 dataType: 'html',

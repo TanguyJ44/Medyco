@@ -99,15 +99,20 @@
                         </div>
                         <div class="col-sm-4">
                             <h3 id="title-contact">Contacts</h3>
-                            <input class="contact-users" id="user-email" type="email" value="-"
-                                disabled>
-                            <input class="contact-users" id="user-address" type="text" value="-"
-                                disabled>
-                            <p><input class="contact-users" id="user-zipcode" style="width: 60px;" type="number" value="00000" disabled><input
-                                    class="contact-users" id="user-city" style="width: calc(100% - 98px); margin-left: 5px;" type="text" value="-" disabled></p>
+                            <input class="contact-users" id="user-email" type="email" value="-" disabled>
+                            <div class="contact-users form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="user-visio" disabled>
+                                <label class="form-check-label" for="user-visio" style="margin-left: 0px;">Consultation en visio</label>
+                            </div>
+                            <input class="contact-users" id="user-address" type="text" value="-" disabled>
+                            <p><input class="contact-users" id="user-zipcode" style="width: 60px;" type="number"
+                                    value="00000" disabled><input class="contact-users" id="user-city"
+                                    style="width: calc(100% - 98px); margin-left: 5px;" type="text" value="-" disabled>
+                            </p>
                         </div>
                         <div class="col-sm-1">
-                            <button class="btn btn-sm float-left pos-btn" id="update-userinfo" onclick="updateUserInfo()">Modifier</button>
+                            <button class="btn btn-sm float-left pos-btn" id="update-userinfo"
+                                onclick="updateUserInfo()">Modifier</button>
                         </div>
                     </div>
                 </div>
@@ -153,8 +158,10 @@
                         <div class="col-md-3 text-center">
                             <input class="align-input text-center" type="number" id="work-time"
                                 placeholder="Durée en minutes (ex: 15)">
-                                <div class="alert alert-success" role="alert" id="save-alert" style="display: none;"><i class="bi bi-check-circle"></i> Sauvegarde réussie</div>
-                            <button class="btn btn-sm" id="save-btn-wt" onclick="updateWorkTime()">Sauvegarder <i class="bi bi-pencil"></i></button>
+                            <div class="alert alert-success" role="alert" id="save-alert" style="display: none;"><i
+                                    class="bi bi-check-circle"></i> Sauvegarde réussie</div>
+                            <button class="btn btn-sm" id="save-btn-wt" onclick="updateWorkTime()">Sauvegarder <i
+                                    class="bi bi-pencil"></i></button>
                         </div>
 
                     </div>

@@ -55,12 +55,14 @@ function getNewPr() {
         type: 'GET',
         dataType: 'html',
         success: function (data, statut) {
+            $("#insert-newpr").empty();
             if (JSON.parse(data).newPr != false) {
-                $("#insert-newpr").empty();
                 $.each(JSON.parse(data), function (i, obj) {
                     $("#insert-newpr").append("<p class='name-new-med' onclick='getInfoNewPr(" + obj.id + ")'>Dr. " + obj.name + "</p>");
                 });
-            } 
+            } else {
+                $("#insert-newpr").append("<p class='text-center' style='margin-left: -3%;'>Aucun nouveaux praticiens en attente</p>");
+            }
             $('#dash-content').show();
             $('#load').hide();
         },
@@ -97,6 +99,10 @@ function getInfoNewPr(id) {
                 } else {
                     $('#pr-visio').text("OUI");
                 }
+                $("#confirm-btn").prop("onclick", null).off("click");
+                $("#confirm-btn").on("click", function () { confirmNewPr(id); });
+                $("#delete-btn").prop("onclick", null).off("click");
+                $("#delete-btn").on("click", function () { removeNewPr(id); });
 
                 $('#valid-med').modal("show");
             }
@@ -107,10 +113,40 @@ function getInfoNewPr(id) {
     });
 }
 
-function confirmNewPr() {
-
+function confirmNewPr(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/admin/' + sessionStorage.getItem("token") + '/confirm-pr/' + id,
+        type: 'PUT',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).confirmPr != false) {
+                $('#valid-med').modal("hide");
+                getNewPr();
+            } else {
+                location.reload();
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log(erreur);
+        }
+    });
 }
 
-function removeNewPr() {
-
+function removeNewPr(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/admin/' + sessionStorage.getItem("token") + '/remove-pr/' + id,
+        type: 'DELETE',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).removePr != false) {
+                $('#valid-med').modal("hide");
+                getNewPr();
+            } else {
+                location.reload();
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log(erreur);
+        }
+    });
 }
