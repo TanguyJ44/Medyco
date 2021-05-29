@@ -339,7 +339,7 @@ function displayMessage(type) {
     if (type == 0) {
         $('.insert-msg').append("<div class='alert alert-danger' role='alert'><h4 class='alert-heading'>Créneau horaire indisponible</h4><p>Le créneau horaire que vous avez choisi n'est plus disponible chez ce praticien, merci de bien vouloir en indiquer un autre !</p><hr><p class='mb-0'><a href='javascript:window.location.reload(true)'>Retourner à la prise de rendez-vous</a></p></div>");
     } else {
-        $('.insert-msg').append("<div class='alert alert-success' role='alert'><h4 class='alert-heading'>Confirmation de rendez-vous</h4><p>Nous vous confirmons que votre rendez-vous chez le praticien " + $('#pr-info-name').text() + " à bien été confirmé pour le " + selectedDate + " à " + selectedTime.substring(0, 5).replace(":", "h") + ". Vous pouvez désormais accéder à votre espace santé pour vérifier les informations de celui-ci.</p><hr><p class='mb-0'><a href='#'>J'accède à mon espace santé</a></p></div>");
+        $('.insert-msg').append("<div class='alert alert-success' role='alert'><h4 class='alert-heading'>Confirmation de rendez-vous</h4><p>Nous vous confirmons que votre rendez-vous chez le praticien " + $('#pr-info-name').text() + " à bien été confirmé pour le " + selectedDate + " à " + selectedTime.substring(0, 5).replace(":", "h") + ". Vous pouvez désormais accéder à votre espace santé pour vérifier les informations de celui-ci.</p><hr><p class='mb-0'><a href='auth/auth.html'>J'accède à mon espace santé</a></p></div>");
     }
 }
 

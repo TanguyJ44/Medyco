@@ -476,7 +476,7 @@ function onConfirmAccount() {
   setTimeout(function () {
     const urlParams = new URLSearchParams(window.location.search);
     $.ajax({
-      url: 'http://localhost:3000/api/auth/confirm/' + urlParams.get('request'),
+      url: 'http://localhost:3000/api/auth/register/confirm/' + urlParams.get('request'),
       type: 'PUT',
       dataType: 'html',
       success: function (data, statut) {
