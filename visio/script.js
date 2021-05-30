@@ -1,7 +1,6 @@
 const domain = 'meet.medyco.fr';
 const options = {
     roomName: 'MedycoTest',
-    height: 700,
     parentNode: document.querySelector('#meet'),
     configOverwrite: {
         prejoinPageEnabled: false
@@ -19,6 +18,8 @@ const options = {
     }
 };
 const api = new JitsiMeetExternalAPI(domain, options);
+
+document.getElementById("meet").style.height = (screen.height - 300) + 'px';
 
 api.on('readyToClose', () => {
     // redirection
