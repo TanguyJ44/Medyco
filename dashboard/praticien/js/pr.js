@@ -15,7 +15,7 @@ function modalCloseRdv() {
 }
 
 function execAppli() {
-    window.location.href = "mailto:" + paSelectEmail + "?body=Voici votre facture et vos ordonnances en pièce jointes ! passé une agréable journée";
+    window.location.href = "mailto:" + paSelectEmail + "?body=Voici votre facture et vos ordonnances en pièce jointes ! Passez une agréable journée";
 }
 
 function checkToken(page) {

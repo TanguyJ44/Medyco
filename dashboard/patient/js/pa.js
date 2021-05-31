@@ -411,7 +411,11 @@ function getUserRdv() {
                 $.each(JSON.parse(data), function (i, obj) {
                     for (let j = 0; j < obj.length; j++) {
                         let rdvType = obj[j].type == 0 ? "Consultation au cabinet" : "Consultation en visioconférence";
-                        $("#rdv-insert").append("<div class='card current-rdv float-right'><div class='row rdv-infos'><div class='col-sm-7'><p>Rendez-vous le <span class='date-rdv'>" + formatDate(obj[j].date) + "</span> à <span class='date-rdv'>" + formatTime(obj[j].time) + "</span></p><p>" + obj[j].name + "</p><p>" + obj[j].specialties + "</p><p>" + obj[j].address + ", " + obj[j].zipcode + " " + obj[j].city + "</p></div><div class='col-sm-3'><h5 class='contact-doctor'>Informations</h5><p class='phone-doctor'>" + rdvType + "</p><p class='mail-doctor'>" + obj[j].email + "</p></div><div class='icon-annuler-rdv col-sm-2'><button class='btn btn-sm float-left pos-btn' id='cancel-rdv-" + obj[j].id + "' onclick='removeUserRdv(" + obj[j].id + ")'>Annuler</button></div></div></div>");
+                        if (obj[j].type == 0) {
+                            $("#rdv-insert").append("<div class='card current-rdv float-right'><div class='row rdv-infos'><div class='col-sm-7'><p>Rendez-vous le <span class='date-rdv'>" + formatDate(obj[j].date) + "</span> à <span class='date-rdv'>" + formatTime(obj[j].time) + "</span></p><p>" + obj[j].name + "</p><p>" + obj[j].specialties + "</p><p>" + obj[j].address + ", " + obj[j].zipcode + " " + obj[j].city + "</p></div><div class='col-sm-3'><h5 class='contact-doctor'>Informations</h5><p class='phone-doctor'>" + rdvType + "</p><p class='mail-doctor'>" + obj[j].email + "</p></div><div class='icon-annuler-rdv col-sm-2'><button class='btn btn-sm float-left pos-btn' id='cancel-rdv-" + obj[j].id + "' onclick='removeUserRdv(" + obj[j].id + ")'>Annuler</button></div></div></div>");
+                        } else {
+                            $("#rdv-insert").append("<div class='card current-rdv float-right'><div class='row rdv-infos'><div class='col-sm-7'><p>Rendez-vous le <span class='date-rdv'>" + formatDate(obj[j].date) + "</span> à <span class='date-rdv'>" + formatTime(obj[j].time) + "</span></p><p>" + obj[j].name + "</p><p>" + obj[j].specialties + "</p><p>" + obj[j].address + ", " + obj[j].zipcode + " " + obj[j].city + "</p></div><div class='col-sm-3'><h5 class='contact-doctor'>Informations</h5><p class='phone-doctor'>" + rdvType + "</p><p class='mail-doctor'>" + obj[j].email + "</p></div><div class='icon-annuler-rdv col-sm-2'><button class='btn btn-sm' style='float: right;' onclick='joinVisio(\"" + obj[j].room + "\", \"" + obj[j].date + "\", \"" + obj[j].time + "\")'><i class='bi bi-camera-video'></i></button><button class='btn btn-sm float-left pos-btn' id='cancel-rdv-" + obj[j].id + "' onclick='removeUserRdv(" + obj[j].id + ")'>Annuler</button></div></div></div>");
+                        }
                     }
                 });
             }
@@ -420,6 +424,23 @@ function getUserRdv() {
             console.log("Error !");
         }
     });
+}
+
+function joinVisio(id, date, time) {
+    const todayDate = new Date();
+    const startDate = new Date(date);
+    startDate.setHours(time.substring(0, 2));
+    startDate.setMinutes(time.substring(3, 5));
+    let scheduleTime = (startDate.getTime() - todayDate.getTime()) / 1000;
+    if (scheduleTime < 601) {
+        document.location.href="../../visio/room.html?tag=" + id;
+    } else {
+        $('#rdv-error').modal('show');
+    }
+}
+
+function modalClose() {
+    $('#rdv-error').modal('hide');
 }
 
 function removeUserRdv(id) {
