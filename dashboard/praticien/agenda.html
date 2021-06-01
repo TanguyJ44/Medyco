@@ -167,19 +167,25 @@
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Détails de votre rendez-vous <i class="close-modal bi bi-x-circle"
-                                        onclick="modalCloseRdv()"></i></h5>
+                                <h5 class="modal-title">Détails de votre rendez-vous <i
+                                        class="close-modal bi bi-x-circle" onclick="modalCloseRdv()"></i></h5>
                             </div>
                             <div class="modal-body">
-                                <p>Vous avez rendez-vous le <span id="rdvinfo-date" style="font-weight: bold;">-</span> à <span id="rdvinfo-time" style="font-weight: bold;">-</span><br>
-                                Avec <span id="rdvinfo-name" style="font-weight: bold;">-</span><br><br>
-                                <span id="rdvinfo-type">-</span><br>
-                                <span id="rdvinfo-consulted">-</span><br><br>
-                                Raison du rendez-vous : <span id="rdvinfo-reason">-</span><br><br>
-                                <span id="rdvinfo-children">-</span></p>
+                                <p>Vous avez rendez-vous le <span id="rdvinfo-date" style="font-weight: bold;">-</span>
+                                    à <span id="rdvinfo-time" style="font-weight: bold;">-</span><br>
+                                    Avec <span id="rdvinfo-name" style="font-weight: bold;">-</span><br><br>
+                                    <span id="rdvinfo-type">-</span><br>
+                                    <span id="rdvinfo-consulted">-</span><br><br>
+                                    Raison du rendez-vous : <span id="rdvinfo-reason">-</span><br><br>
+                                    <span id="rdvinfo-children">-</span>
+                                </p>
+                                <p id="error-visio" style="color: #e74c3c;">Vous pourrez rejoindre ce rendez-vous seulement 10 minutes avant la date et l'heure de commencement de celui-ci !</p>
+                                <button class="btn btn-sm" id="btn-visio"><i class="bi bi-camera-video"></i> Rejoindre
+                                    la visio</button>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" id="remove-rdv">Annuler le rendez-vous</button>
+                                <button type="button" class="btn btn-primary" id="remove-rdv">Annuler le
+                                    rendez-vous</button>
                             </div>
                         </div>
                     </div>

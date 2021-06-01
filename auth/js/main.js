@@ -259,7 +259,7 @@ function checkToken() {
           if (sessionStorage.getItem("type") == 0) {
             window.location.href = '../dashboard/patient/profil.html';
           } else {
-            // Redirection PR
+            window.location.href = '../dashboard/praticien/profil.html';
           }
         } else {
           sessionStorage.removeItem("token");

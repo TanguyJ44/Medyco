@@ -157,9 +157,9 @@ function getUserInfo() {
                 $('#user-spe').val(result[0].specialties);
                 $('#user-email').val(result[0].email);
                 if (result[0].visio == 0) {
-                    $('#user-visio').prop( "checked", false );
+                    $('#user-visio').prop("checked", false);
                 } else {
-                    $('#user-visio').prop( "checked", true );
+                    $('#user-visio').prop("checked", true);
                 }
                 $('#user-address').val(result[0].address);
                 $('#user-zipcode').val(result[0].zipcode);
@@ -239,7 +239,7 @@ function getWorkTime() {
                 $('#sundayAM').val(result[0].sundayAM);
                 $('#sundayPM').val(result[0].sundayPM);
                 $('#work-time').val(result[0].meetingTime.substring(3, 5));
-                
+
                 newWorkTime = false;
             }
         },
@@ -349,6 +349,13 @@ function getRdvInfo(id) {
                 } else {
                     $('#rdvinfo-children').text("");
                 }
+                $('#error-visio').hide();
+                if (result[0].type == 1) {
+                    $('#btn-visio').show();
+                    $('#btn-visio').on("click", function () { joinVisio(result[0].room, result[0].date, result[0].time); });
+                } else {
+                    $('#btn-visio').hide();
+                }
 
                 $('#remove-rdv').on("click", function () { removeRdv(id); });
                 $('#info-rdv').modal('show');
@@ -358,6 +365,20 @@ function getRdvInfo(id) {
             console.log("Error !");
         }
     });
+}
+
+function joinVisio(id, date, time) {
+    const todayDate = new Date();
+    const startDate = new Date(date);
+    startDate.setHours(time.substring(0, 2));
+    startDate.setMinutes(time.substring(3, 5));
+    let scheduleTime = (startDate.getTime() - todayDate.getTime()) / 1000;
+
+    if (scheduleTime < 601) {
+        document.location.href = "../../visio/room.html?tag=" + id;
+    } else {
+        $('#error-visio').show();
+    }
 }
 
 function removeRdv(id) {
