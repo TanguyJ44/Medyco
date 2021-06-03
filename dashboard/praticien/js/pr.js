@@ -14,6 +14,15 @@ function modalCloseRdv() {
     $('#info-rdv').modal('hide');
 }
 
+function modalOpenVacations() {
+    $('#vacations-gui').modal({ backdrop: "static", keyboard: false });
+    $('#vacations-gui').modal('show');
+}
+
+function modalCloseVacations() {
+    $('#vacations-gui').modal('hide');
+}
+
 function execAppli() {
     window.location.href = "mailto:" + paSelectEmail + "?body=Voici votre facture et vos ordonnances en pièce jointes ! Passez une agréable journée";
 }
