@@ -15,6 +15,14 @@ function modalCloseRdv() {
 }
 
 function modalOpenVacations() {
+    let today = new Date();
+
+    getVacationsDays();
+    $("#vacation-date").attr({
+        "min": today.getFullYear() + '-' +
+            ('00' + (today.getMonth() + 1)).slice(-2) + '-' +
+            ('00' + today.getDate()).slice(-2)
+    });
     $('#vacations-gui').modal({ backdrop: "static", keyboard: false });
     $('#vacations-gui').modal('show');
 }
@@ -300,6 +308,67 @@ function updateWorkTime() {
     } else {
         document.location.reload();
     }
+}
+
+function addVacationsDays() {
+    if ($("#vacation-date").val().length > 1) {
+        $("#add-vacation").prop("disabled", true);
+        $.ajax({
+            url: 'http://localhost:3000/api/pr/add/vacation-day',
+            type: 'POST',
+            data: {
+                token: sessionStorage.getItem('token'),
+                date: $("#vacation-date").val()
+            },
+            dataType: 'html',
+            success: function (data, statut) {
+                $("#add-vacation").prop("disabled", false);
+                $("#vacation-date").val('');
+                getVacationsDays();
+            },
+            error: function (result, statut, erreur) {
+                console.log("Error !");
+            }
+        });
+    }
+}
+
+function getVacationsDays() {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/vacations-days',
+        type: 'GET',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).vacationsDays != false) {
+                $("#vacations-insert").empty();
+                $.each(JSON.parse(data), function (i, obj) {
+                    $("#vacations-insert").append("<div class='card' style='height: 65px;margin-bottom: 10px;'><div class='card-body'><p style='font-size: 20px;'><i class='bi bi-calendar3'></i> <span style='width: 90%; margin-left: 2%;'>Toute la journée du " + formatDate(obj.date) + "</span><i class='bi bi-x-circle' style='float: right;cursor: pointer;' onclick='removeVacation(" + obj.id + ")'></i></p></div></div>");
+                });
+            } else {
+                $("#vacations-insert").empty();
+                $("#vacations-insert").append("<p class='text-center'>Vous n'avez pas posé de jours de congés</p>");
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
+}
+
+function removeVacation(id) {
+    $.ajax({
+        url: 'http://localhost:3000/api/pr/' + sessionStorage.getItem('token') + '/remove/vacation/' + id,
+        type: 'DELETE',
+        dataType: 'html',
+        success: function (data, statut) {
+            if (JSON.parse(data).removeVacation != false) {
+                getVacationsDays();
+            }
+        },
+        error: function (result, statut, erreur) {
+            console.log("Error !");
+        }
+    });
 }
 
 function getDateRdvSlot(index) {
