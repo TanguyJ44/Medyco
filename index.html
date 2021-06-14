@@ -6,12 +6,11 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>Medyco : Vos rendez-vous santé en ligne</title>
-    
+
     <meta content="Plateforme de rendez-vous et de consultation médicale" name="description">
     <meta content="medical, médecin, plateforme, consultation, visio" name="keywords">
 
     <link href="assets/img/favicon.png" rel="icon">
-
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i"
         rel="stylesheet">
@@ -53,8 +52,7 @@
                     <h2>Rechercher et prenez rendez-vous chez l'un de nos spécialistes de santé</h2>
                     <div>
                         <a href="search.html" class="btn-get-search scrollto">
-                            <i class="fa fa-search icon-get-search" aria-hidden="true"></i> Rechercher un professionnel
-                            de santé
+                            <i class="fa fa-search icon-get-search" aria-hidden="true"></i> Rechercher un spécialiste
                         </a>
                     </div>
                 </div>
@@ -219,14 +217,16 @@
                                 class="bi bi-chevron-up icon-close"></i></div>
                         <div id="faq4" class="collapse" data-bs-parent=".faq-list">
                             <p>
-                                Si votre enfant à moins de 16 ans ou que ce dernier ne possède pas encore de carte vitale,
+                                Si votre enfant à moins de 16 ans ou que ce dernier ne possède pas encore de carte
+                                vitale,
                                 vous devez le rattacher à votre espace patient afin de
                                 prendre rendez-vous pour lui. Connectez-vous à votre espace santé et accédez à l'onglet
                                 "Mes enfants". Depuis cette page, vous avez la possibilité de déclarer un nouvel
                                 enfant en fournissant les informations demandées. Une fois votre enfant déclaré, vous
                                 pourrez indiquer la personne concernée lors de la prise d'un nouveau rendez-vous.
                                 N'oubliez pas que lorsque votre enfant recevra ça carte vitale, il devra se créer un
-                                compte sur notre plateforme et vous serez tenu de supprimer son profil enfant dans l'onglet
+                                compte sur notre plateforme et vous serez tenu de supprimer son profil enfant dans
+                                l'onglet
                                 "Mes enfants".
                             </p>
                         </div>
@@ -304,8 +304,8 @@
                         <p>Laissez-nous votre adresse e-mail et un membre de notre équipe reprendra contact avec vous
                             prochainement</p>
                         <form action="" method="post">
-                            <input type="email" name="email" placeholder="Indiquer votre e-mail"><input type="submit"
-                                value="Demande d'assistance">
+                            <input type="email" id="help-email" placeholder="Indiquer votre e-mail"><input type="submit"
+                                value="Demande d'assistance" onclick="alert('Votre demande a bien été prise en compte, un opérateur Medyco reprendra contact avec vous dans les plus brefs délais.');$('#help-email').empty();">
                         </form>
                     </div>
                 </div>
@@ -314,7 +314,7 @@
 
         <div class="container py-4">
             <div class="copyright">
-                &copy; Copyright <strong><span>Medyco 2021</span></strong>. Tous droits réservés
+                &copy; Copyright <strong><span>Medyco 2021</span></strong>. Tous droits réservés - <a href="cgu.html">CGU</a>
             </div>
             <div class="credits">
                 Plateforme médicale réalisée dans le cadre d'un projet SUPINFO
@@ -325,8 +325,8 @@
     <script
         type="text/javascript">!function (t, e) { t.artibotApi = { l: [], t: [], on: function () { this.l.push(arguments) }, trigger: function () { this.t.push(arguments) } }; var a = !1, i = e.createElement("script"); i.async = !0, i.type = "text/javascript", i.src = "https://app.artibot.ai/loader.js", e.getElementsByTagName("head").item(0).appendChild(i), i.onreadystatechange = i.onload = function () { if (!(a || this.readyState && "loaded" != this.readyState && "complete" != this.readyState)) { new window.ArtiBot({ i: "a94c8755-686e-47bd-abf0-e9b4fcdc6726" }); a = !0 } } }(window, document);</script>
 
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
+    <a class="back-to-top d-flex align-items-center justify-content-center" style="cursor: pointer;"
+        onclick="$('html, body').animate({scrollTop: 0}, 100);"><i class="bi bi-arrow-up-short"></i></a>
 
     <script src="assets/vendor/aos/aos.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

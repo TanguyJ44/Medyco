@@ -2,6 +2,21 @@ function modal_Close() {
     $('#valid-med').modal('hide');
 }
 
+$(document).ready(function () {
+    var timerId = $("#monitor").uptimeRobotMonitor({
+        mainApiKey: 'u1337817-4c357a2a37e781c2d95d354c',
+        numOfMonitorsPerRow: 3,
+        monitorConfs: [{
+            friendlyName: 'REAL NAME IN UPTIMEROBOT',
+            name: 'DISPLAY NAME - OPTIONAL',
+            color: '#E67EA8 - OPTIONAL'
+        }],
+        backgroundColor: "#ffffff",
+        refresh: true,
+        refreshInterval: 60	
+    });
+});
+
 function checkToken() {
     if (sessionStorage.getItem("token") != null) {
         $.ajax({
